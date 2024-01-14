@@ -12,6 +12,7 @@
 		"test:unit": "vitest"
 	},
 	"devDependencies": {
+		"@iconify-json/ph": "^1.1.10",
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
@@ -24,6 +25,7 @@
 		"prettier-plugin-svelte": "^3.1.2",
 		"sass": "^1.69.7",
 		"svelte": "^4.2.7",
+		"unplugin-icons": "^0.18.2",
 		"vite": "^5.0.3",
 		"vitest": "^1.0.0"
 	},
