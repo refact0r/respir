@@ -6,8 +6,10 @@
 	<meta name="description" content="" />
 </svelte:head>
 
+<head></head>
+
 <main>
-	<div class="visualizer">test</div>
+	<div class="middle">test</div>
 </main>
 
 <style lang="scss">
