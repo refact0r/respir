@@ -1,13 +1,29 @@
 :root {
 	--bg: oklch(90% 0.04 180);
+	--bg-2: oklch(85% 0.04 180);
+	--txt: oklch(20% 0.01 180);
 }
 
 body {
 	font-family: 'Quicksand', sans-serif;
 	font-family: 'Outfit', sans-serif;
-	font-family: 'Satoshi', sans-serif;
-	font-family: 'Epilogue', sans-serif;
-	font-family: 'Chillax', sans-serif;
-	margin: 0;
+	// font-family: 'Satoshi', sans-serif;
+	// font-family: 'Epilogue', sans-serif;
+	// font-family: 'Chillax', sans-serif;
+	font-weight: 300;
+	color: var(--txt);
 	background: var(--bg);
+	margin: 0;
+}
+
+button {
+	outline: none;
+	border: none;
+	background: none;
+	font: inherit;
+	color: inherit;
+
+	&:hover {
+		cursor: pointer;
+	}
 }
