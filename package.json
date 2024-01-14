@@ -12,6 +12,7 @@
 		"test:unit": "vitest"
 	},
 	"devDependencies": {
+		"@iconify-json/healthicons": "^1.1.17",
 		"@iconify-json/ph": "^1.1.10",
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
