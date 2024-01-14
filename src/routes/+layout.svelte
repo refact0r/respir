@@ -3,10 +3,14 @@
 </script>
 
 <div class="app">
-	<main>
-		<slot />
-	</main>
+	<slot />
 </div>
 
 <style lang="scss">
+	.app {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		min-height: 100vh;
+	}
 </style>

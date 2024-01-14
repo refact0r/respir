@@ -1,0 +1,8 @@
+:root {
+	--bg: oklch(90% 0.04 180);
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+}
