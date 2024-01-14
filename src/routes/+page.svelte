@@ -8,13 +8,9 @@
 
 	onMount(() => {
 		const interval = setInterval(() => {
-			console.log("switched");
+			console.log('switched');
 			toggleSize();
 		}, 8000);
-
-		onDestroy(() => {
-			clearInterval(interval);
-		});
 	});
 
 	$: {
@@ -28,7 +24,6 @@
 		if (growing) {
 			currentSize += 150;
 			growing = false;
-			
 		} else {
 			currentSize -= 150;
 			growing = true;
@@ -48,8 +43,10 @@
 
 <style lang="scss">
 	#circle {
-	border-radius: 50%;
-	background-color: rgb(0, 106, 255); /* Initial color */
-	transition: width 8.0s, height 8.0s; /* Add a transition for smoother size changes */
+		border-radius: 50%;
+		background-color: rgb(0, 106, 255); /* Initial color */
+		transition:
+			width 8s,
+			height 8s; /* Add a transition for smoother size changes */
 	}
 </style>
