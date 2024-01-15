@@ -1,13 +1,15 @@
 <script>
-	import IconPlay from '~icons/ph/play';
-	import IconPause from '~icons/ph/pause';
+	import IconPlay from '~icons/ph/play-duotone';
+	import IconPause from '~icons/ph/pause-duotone';
+	import IconHouse from '~icons/ph/house-duotone';
+	import IconGear from '~icons/ph/gear-duotone';
 
 	let inWav, outWav, holdWav, forestWav;
 
 	let exercise = {
 		name: 'Box Breathing',
 		description: '',
-		cycles: 5,
+		cycles: 3,
 		routine: [
 			{
 				name: 'breathe in',
@@ -38,9 +40,13 @@
 	let timer;
 
 	let count = 0;
-	let text = 'click to start';
+	let text = 'click play to start';
 
 	let circle;
+	let outerBox = 16;
+	let innerBox = 14;
+	let offset = 0.5;
+	let circleSize = (outerBox - innerBox) / 2;
 
 	// when play/pause is clicked
 	function togglePlay() {
@@ -73,23 +79,8 @@
 	// main event loop
 	function frame(time) {
 		// animate stuff
-		const elapsedStep = time - prevStep;
 		if (cycle >= 0) {
-			const stepDuration = exercise.routine[step].duration;
-			const fraction = elapsedStep / 1000 / stepDuration;
-			if (step === 0) {
-				circle.style.left = `0rem`;
-				circle.style.bottom = `${fraction * 10}rem`;
-			} else if (step === 1) {
-				circle.style.left = `${fraction * 10}rem`;
-				circle.style.bottom = `10rem`;
-			} else if (step === 2) {
-				circle.style.left = `10rem`;
-				circle.style.bottom = `${10 - fraction * 10}rem`;
-			} else if (step === 3) {
-				circle.style.left = `${10 - fraction * 10}rem`;
-				circle.style.bottom = `0rem`;
-			}
+			animateBox(time);
 		}
 
 		// update stuff every 1 second
@@ -99,16 +90,26 @@
 
 			count--;
 			if (cycle === -1) {
+				// end countdown
 				if (count === 0) {
 					cycle = 0;
 					count = exercise.routine[step].duration;
 					prevStep = time;
 				}
 			} else {
+				// go to next step
 				if (count === 0) {
 					if (step === exercise.routine.length - 1) {
-						cycle++;
 						step = 0;
+						cycle++;
+						// all cycles complete
+						if (cycle === exercise.cycles) {
+							cycle = -2;
+							play = false;
+							count = 0;
+							text = 'click to start';
+							return;
+						}
 					} else {
 						step++;
 					}
@@ -120,6 +121,30 @@
 		}
 		timer = window.requestAnimationFrame(frame);
 	}
+
+	// animate circle around box
+	function animateBox(time) {
+		const elapsedStep = time - prevStep;
+		const stepDuration = exercise.routine[step].duration;
+		const distance = outerBox - circleSize;
+		const increasing = (elapsedStep / 1000 / stepDuration) * distance - offset;
+		const decreasing = distance - (elapsedStep / 1000 / stepDuration) * distance - offset;
+		if (step === 0) {
+			circle.style.left = `${-offset}rem`;
+			circle.style.bottom = `${increasing}rem`;
+		} else if (step === 1) {
+			circle.style.left = `${increasing}rem`;
+			circle.style.bottom = `${distance - offset}rem`;
+		} else if (step === 2) {
+			circle.style.left = `${distance - offset}rem`;
+			circle.style.bottom = `${decreasing}rem`;
+		} else if (step === 3) {
+			circle.style.left = `${decreasing}rem`;
+			circle.style.bottom = `${-offset}rem`;
+		}
+	}
+
+	function toggleSettings() {}
 </script>
 
 <svelte:head>
@@ -133,21 +158,27 @@
 	<div class="middle">
 		<div class="visualizer">
 			<div class="box">
-				<div class="box-inner"></div>
+				<div class="box-inner">
+					<div class="count">{cycle >= -1 ? count : ''}</div>
+				</div>
 				<div class="circle" bind:this={circle}></div>
 			</div>
 		</div>
-		<div class="count">{cycle >= -1 ? cycle : ''}</div>
-		<div class="count">{cycle >= -1 ? count : ''}</div>
 		<div class="text">{text}</div>
 	</div>
 	<div class="bottom">
-		<button on:click={togglePlay}>
+		<a class="side-button" href="/">
+			<IconHouse style="font-size: 1.5rem;" />
+		</a>
+		<button class="play-button" on:click={togglePlay}>
 			{#if play}
-				<IconPause style="font-size: 1.6rem;" />
+				<IconPause style="font-size: 2rem;" />
 			{:else}
-				<IconPlay style="font-size: 1.6rem;" />
+				<IconPlay style="font-size: 2rem;" />
 			{/if}
+		</button>
+		<button class="side-button" on:click={toggleSettings}>
+			<IconGear style="font-size: 1.5rem;" />
 		</button>
 	</div>
 </main>
@@ -178,57 +209,82 @@
 	}
 
 	.middle {
+		flex: 1;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		flex: 1;
+		align-items: center;
+		gap: 3rem;
 	}
 
 	.bottom {
 		padding: 2rem;
+		display: flex;
+		align-items: center;
+		gap: 2rem;
+	}
+
+	.visualizer {
+		margin-top: 3rem;
 	}
 
 	.text {
 		font-size: 2rem;
 	}
 
-	button {
+	.side-button,
+	.play-button {
+		color: inherit;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 1rem;
 		border-radius: 50%;
 		background: var(--bg-2);
 	}
 
-	.visualizer {
+	.side-button {
+		padding: 1rem;
+	}
+
+	.play-button {
+		padding: 1.6rem;
+		height: auto;
 	}
 
 	.box {
-		width: 11rem;
-		height: 11rem;
+		width: 16rem;
+		height: 16rem;
 		background: var(--bg-2);
+		border-radius: 1rem;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.box-inner {
+		width: 14rem;
+		height: 14rem;
+		background: var(--bg);
 		border-radius: 0.5rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		position: relative;
 	}
 
-	.box-inner {
-		width: 9rem;
-		height: 9rem;
-		background: var(--bg);
+	.count {
+		font-size: 3rem;
 	}
 
 	.circle {
 		position: absolute;
-		left: 0;
-		bottom: 0;
-		width: 1rem;
-		height: 1rem;
+		left: -0.5rem;
+		bottom: -0.5rem;
+		width: 2rem;
+		height: 2rem;
 		border-radius: 50%;
-		background: var(--txt);
+		border: 2.5px solid var(--txt);
+		background: var(--bg-3);
 		// animation: 4s linear 1 breathe;
 	}
 
