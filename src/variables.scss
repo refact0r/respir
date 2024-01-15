@@ -1,0 +1,14 @@
+@mixin flexCenter {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin iconButton {
+	@include flexCenter;
+
+	padding: 1rem;
+	color: inherit;
+	background: var(--bg-2);
+	border-radius: 50%;
+}
