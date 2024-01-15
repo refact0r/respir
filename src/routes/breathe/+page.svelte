@@ -33,8 +33,8 @@
 	};
 
 	let play = false;
-	let cycle = -1;
-	let step = -1;
+	let cycle = -2;
+	let step = 0;
 	let timer;
 
 	let count = 0;
@@ -46,8 +46,8 @@
 	function togglePlay() {
 		play = !play;
 		// initial start
-		if (cycle === -1) {
-			cycle = 0;
+		if (cycle === -2) {
+			cycle = -1;
 			count = 3;
 			text = 'get ready';
 			timer = window.requestAnimationFrame(firstFrame);
@@ -60,18 +60,37 @@
 		}
 	}
 
-	let startTime, prevSec;
+	let startTime, prevSec, prevStep;
 
 	// initialize start time
 	function firstFrame(time) {
 		startTime = time;
 		prevSec = time;
+		prevStep = time;
 		frame(time);
 	}
 
 	// main event loop
 	function frame(time) {
 		// animate stuff
+		const elapsedStep = time - prevStep;
+		if (cycle >= 0) {
+			const stepDuration = exercise.routine[step].duration;
+			const fraction = elapsedStep / 1000 / stepDuration;
+			if (step === 0) {
+				circle.style.left = `0rem`;
+				circle.style.bottom = `${fraction * 10}rem`;
+			} else if (step === 1) {
+				circle.style.left = `${fraction * 10}rem`;
+				circle.style.bottom = `10rem`;
+			} else if (step === 2) {
+				circle.style.left = `10rem`;
+				circle.style.bottom = `${10 - fraction * 10}rem`;
+			} else if (step === 3) {
+				circle.style.left = `${10 - fraction * 10}rem`;
+				circle.style.bottom = `0rem`;
+			}
+		}
 
 		// update stuff every 1 second
 		const elapsedSec = time - prevSec;
@@ -81,7 +100,9 @@
 			count--;
 			if (cycle === -1) {
 				if (count === 0) {
-					cycle++;
+					cycle = 0;
+					count = exercise.routine[step].duration;
+					prevStep = time;
 				}
 			} else {
 				if (count === 0) {
@@ -91,6 +112,7 @@
 					} else {
 						step++;
 					}
+					prevStep = time;
 					count = exercise.routine[step].duration;
 					text = exercise.routine[step].name;
 				}
@@ -110,10 +132,13 @@
 <main>
 	<div class="middle">
 		<div class="visualizer">
-			<div class="circle" bind:this={circle}></div>
+			<div class="box">
+				<div class="box-inner"></div>
+				<div class="circle" bind:this={circle}></div>
+			</div>
 		</div>
-		<div class="count">{cycle >= 0 ? cycle : ''}</div>
-		<div class="count">{cycle >= 0 ? count : ''}</div>
+		<div class="count">{cycle >= -1 ? cycle : ''}</div>
+		<div class="count">{cycle >= -1 ? count : ''}</div>
 		<div class="text">{text}</div>
 	</div>
 	<div class="bottom">
@@ -177,14 +202,29 @@
 	}
 
 	.visualizer {
-		width: 21rem;
-		height: 1rem;
+	}
+
+	.box {
+		width: 11rem;
+		height: 11rem;
 		background: var(--bg-2);
+		border-radius: 0.5rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+	}
+
+	.box-inner {
+		width: 9rem;
+		height: 9rem;
+		background: var(--bg);
 	}
 
 	.circle {
-		position: relative;
+		position: absolute;
 		left: 0;
+		bottom: 0;
 		width: 1rem;
 		height: 1rem;
 		border-radius: 50%;
