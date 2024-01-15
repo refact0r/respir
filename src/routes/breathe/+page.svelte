@@ -60,7 +60,7 @@
 		}
 	}
 
-	let startTime, prevSec, prevFrame;
+	let startTime, prevSec;
 
 	// initialize start time
 	function firstFrame(time) {
@@ -71,9 +71,9 @@
 
 	// main event loop
 	function frame(time) {
-		if (prevFrame !== time) {
-		}
+		// animate stuff
 
+		// update stuff every 1 second
 		const elapsedSec = time - prevSec;
 		if (elapsedSec >= 1000) {
 			prevSec += 1000;
@@ -96,7 +96,6 @@
 				}
 			}
 		}
-
 		timer = window.requestAnimationFrame(frame);
 	}
 </script>
