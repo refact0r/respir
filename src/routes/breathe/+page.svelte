@@ -38,6 +38,8 @@
 	let count = 0;
 	let text = 'click to start';
 
+	let circle;
+
 	// when play/pause is clicked
 	function togglePlay() {
 		play = !play;
@@ -64,6 +66,9 @@
 			return;
 		}
 		if (count === 0) {
+			circle.style.animation = 'none';
+			circle.offsetHeight;
+			circle.style.animation = null;
 			if (step === exercise.routine.length - 1) {
 				cycle++;
 				step = 0;
@@ -85,6 +90,9 @@
 
 <main>
 	<div class="middle">
+		<div class="visualizer">
+			<div class="circle" bind:this={circle}></div>
+		</div>
 		<div class="count">{cycle >= 0 ? cycle : ''}</div>
 		<div class="count">{cycle >= 0 ? count : ''}</div>
 		<div class="text">{text}</div>
@@ -130,5 +138,33 @@
 		padding: 1rem;
 		border-radius: 50%;
 		background: var(--bg-2);
+	}
+
+	.visualizer {
+		width: 21rem;
+		height: 1rem;
+		background: var(--bg-2);
+	}
+
+	.circle {
+		position: relative;
+		left: 0;
+		width: 1rem;
+		height: 1rem;
+		border-radius: 50%;
+		background: var(--txt);
+		animation: 4s linear 1 breathe;
+	}
+
+	@keyframes breathe {
+		0% {
+			left: 0;
+		}
+		50% {
+			left: 20rem;
+		}
+		100% {
+			left: 0;
+		}
 	}
 </style>
