@@ -2,6 +2,8 @@
 	import IconPlay from '~icons/ph/play';
 	import IconPause from '~icons/ph/pause';
 
+	let inWav, outWav, holdWav, forestWav;
+
 	let exercise = {
 		name: 'Box Breathing',
 		description: '',
@@ -43,41 +45,59 @@
 	// when play/pause is clicked
 	function togglePlay() {
 		play = !play;
+		// initial start
 		if (cycle === -1) {
 			cycle = 0;
 			count = 3;
 			text = 'get ready';
-			timer = setInterval(tick, 1000);
+			timer = window.requestAnimationFrame(firstFrame);
 			return;
 		}
 		if (play) {
-			timer = setInterval(tick, 1000);
+			timer = window.requestAnimationFrame(firstFrame);
 		} else {
-			clearInterval(timer);
+			window.cancelAnimationFrame(timer);
 		}
 	}
+
+	let startTime, prevSec, prevFrame;
+
+	// initialize start time
+	function firstFrame(time) {
+		startTime = time;
+		prevSec = time;
+		frame(time);
+	}
+
 	// main event loop
-	function tick() {
-		count--;
-		if (cycle === -1) {
-			if (count === 0) {
-				cycle++;
-			}
-			return;
+	function frame(time) {
+		if (prevFrame !== time) {
 		}
-		if (count === 0) {
-			circle.style.animation = 'none';
-			circle.offsetHeight;
-			circle.style.animation = null;
-			if (step === exercise.routine.length - 1) {
-				cycle++;
-				step = 0;
+
+		const elapsedSec = time - prevSec;
+		if (elapsedSec >= 1000) {
+			prevSec += 1000;
+
+			count--;
+			if (cycle === -1) {
+				if (count === 0) {
+					cycle++;
+				}
 			} else {
-				step++;
+				if (count === 0) {
+					if (step === exercise.routine.length - 1) {
+						cycle++;
+						step = 0;
+					} else {
+						step++;
+					}
+					count = exercise.routine[step].duration;
+					text = exercise.routine[step].name;
+				}
 			}
-			count = exercise.routine[step].duration;
-			text = exercise.routine[step].name;
 		}
+
+		timer = window.requestAnimationFrame(frame);
 	}
 </script>
 
@@ -107,6 +127,23 @@
 		</button>
 	</div>
 </main>
+
+<audio bind:this={inWav}>
+	<source src="/audio/breathe-in.wav" type="audio/wav" />
+	Your browser does not support the audio element.
+</audio>
+<audio bind:this={outWav}>
+	<source src="/audio/breathe-out.wav" type="audio/wav" />
+	Your browser does not support the audio element.
+</audio>
+<audio bind:this={holdWav}>
+	<source src="/audio/hold.wav" type="audio/wav" />
+	Your browser does not support the audio element.
+</audio>
+<audio bind:this={forestWav}>
+	<source src="/audio/forest.mp3" type="audio/mp3" />
+	Your browser does not support the audio element.
+</audio>
 
 <style lang="scss">
 	main {
@@ -153,7 +190,7 @@
 		height: 1rem;
 		border-radius: 50%;
 		background: var(--txt);
-		animation: 4s linear 1 breathe;
+		// animation: 4s linear 1 breathe;
 	}
 
 	@keyframes breathe {
