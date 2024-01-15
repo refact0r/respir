@@ -15,8 +15,7 @@
 
 	$: {
 		if (circle) {
-			circle.style.width = `${currentSize}px`;
-			circle.style.height = `${currentSize}px`;
+			circle.style.scale = `${currentSize}%`;
 		}
 	}
 
@@ -32,22 +31,30 @@
 </script>
 
 <svelte:head>
-	<title>Zen Rhythm</title>
+	<title>Home - Zen Rhythm</title>
 	<meta name="description" content="" />
 </svelte:head>
 
-<section>
-	<h1>hello world</h1>
-	<p>hello world</p>
+<main>
+	<h1>Relax Your Mind</h1>
+	<p>Here at Zen Rhythm, breathe away stress and anxiety through our helpful breathing guide.</p>
 	<div bind:this={circle} id="circle"></div>
-</section>
+</main>
 
 <style lang="scss">
+	main {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 	#circle {
+		position: fixed;
+		top: 16rem;
+		width: 50px;
+		height: 50px;
 		border-radius: 50%;
 		background-color: rgb(0, 106, 255); /* Initial color */
-		transition:
-			width 8s,
-			height 8s; /* Add a transition for smoother size changes */
+		transition: scale 8s;
 	}
 </style>
