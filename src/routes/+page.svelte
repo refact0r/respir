@@ -38,6 +38,7 @@
 
 <section>
 	<h1>hello world</h1>
+	<p>hello world</p>
 	<div bind:this={circle} id="circle"></div>
 </section>
 

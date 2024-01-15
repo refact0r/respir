@@ -1,10 +1,8 @@
 <script>
-	import './app.scss';
-	import Header from './Header.svelte';
+	import '../app.scss';
 </script>
 
 <div class="app">
-	<Header />
 	<div class="main">
 		<main>
 			<slot />
@@ -35,18 +33,13 @@
 		flex-direction: column;
 		height: 100%;
 		min-height: 100vh;
-		background-image: linear-gradient(to bottom right, hsl(184, 52%, 77%), hsl(216, 52%, 77%));
-		color: hsl(196, 33%, 30%);
 	}
 
 	.main {
+		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 0.8rem;
-		gap: 0.8rem;
-		min-height: 80vh;
 		z-index: 1;
-		padding-top: 3.6rem;
 	}
 
 	main {
@@ -54,10 +47,12 @@
 		display: flex;
 		flex-direction: column;
 	}
+
 	.sticky {
 		margin: 0;
 		padding: 0;
 	}
+
 	.bubbles {
 		position: fixed;
 		width: 100%;
@@ -72,15 +67,8 @@
 		bottom: -100px;
 		width: 40px;
 		height: 40px;
-		background-color: hsla(196, 100%, 95%, 0.6);
-		/*background-image: linear-gradient(
-			to bottom right,
-			hsl(0, 0%, 100%, 0.6),
-			hsl(0, 0%, 100%, 0.6),
-			hsl(254, 44%, 44%, 0.6)
-		);*/
+		background-color: oklch(93% 0.05 180);
 		border-radius: 50%;
-		//opacity: 0.5;
 		animation: rise 10s infinite ease-in;
 	}
 	.bubble:nth-child(1) {

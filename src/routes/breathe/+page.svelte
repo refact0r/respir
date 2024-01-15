@@ -42,12 +42,6 @@
 	let count = 0;
 	let text = 'click play to start';
 
-	let circle;
-	let outerBox = 16;
-	let innerBox = 14;
-	let offset = 0.5;
-	let circleSize = (outerBox - innerBox) / 2;
-
 	// when play/pause is clicked
 	function togglePlay() {
 		play = !play;
@@ -93,8 +87,9 @@
 				// end countdown
 				if (count === 0) {
 					cycle = 0;
-					count = exercise.routine[step].duration;
 					prevStep = time;
+					count = exercise.routine[step].duration;
+					text = exercise.routine[step].name;
 				}
 			} else {
 				// go to next step
@@ -122,25 +117,31 @@
 		timer = window.requestAnimationFrame(frame);
 	}
 
+	let circle;
+	let boxSize = 16;
+	let trackSize = 1;
+	let circleSize = 2.5;
+	let offset = (circleSize - trackSize) / -2 - 1;
+
 	// animate circle around box
 	function animateBox(time) {
 		const elapsedStep = time - prevStep;
 		const stepDuration = exercise.routine[step].duration;
-		const distance = outerBox - circleSize;
-		const increasing = (elapsedStep / 1000 / stepDuration) * distance - offset;
-		const decreasing = distance - (elapsedStep / 1000 / stepDuration) * distance - offset;
+		const distance = boxSize - trackSize;
+		const increasing = (elapsedStep / 1000 / stepDuration) * distance + offset;
+		const decreasing = distance - (elapsedStep / 1000 / stepDuration) * distance + offset;
 		if (step === 0) {
-			circle.style.left = `${-offset}rem`;
+			circle.style.left = `${offset}rem`;
 			circle.style.bottom = `${increasing}rem`;
 		} else if (step === 1) {
 			circle.style.left = `${increasing}rem`;
-			circle.style.bottom = `${distance - offset}rem`;
+			circle.style.bottom = `${distance + offset}rem`;
 		} else if (step === 2) {
-			circle.style.left = `${distance - offset}rem`;
+			circle.style.left = `${distance + offset}rem`;
 			circle.style.bottom = `${decreasing}rem`;
 		} else if (step === 3) {
 			circle.style.left = `${decreasing}rem`;
-			circle.style.bottom = `${-offset}rem`;
+			circle.style.bottom = `${offset}rem`;
 		}
 	}
 
@@ -158,9 +159,7 @@
 	<div class="middle">
 		<div class="visualizer">
 			<div class="box">
-				<div class="box-inner">
-					<div class="count">{cycle >= -1 ? count : ''}</div>
-				</div>
+				<div class="count">{cycle >= -1 ? count : ''}</div>
 				<div class="circle" bind:this={circle}></div>
 			</div>
 		</div>
@@ -209,11 +208,10 @@
 	}
 
 	.middle {
+		@include flexCenter;
+
 		flex: 1;
-		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
 		gap: 3rem;
 	}
 
@@ -234,39 +232,24 @@
 
 	.side-button,
 	.play-button {
-		color: inherit;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border-radius: 50%;
-		background: var(--bg-2);
-	}
-
-	.side-button {
-		padding: 1rem;
+		@include iconButton;
 	}
 
 	.play-button {
 		padding: 1.6rem;
-		height: auto;
 	}
+
+	$box-size: 16rem;
+	$track-size: 1rem;
+	$circle-size: 2.5rem;
+	$offset: calc(-1rem * ($circle-size - $track-size) / 2rem - 1rem);
 
 	.box {
-		width: 16rem;
-		height: 16rem;
-		background: var(--bg-2);
-		border-radius: 1rem;
+		width: $box-size;
+		height: $box-size;
+		border: $track-size solid var(--bg-2);
+		border-radius: 1.5rem;
 		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.box-inner {
-		width: 14rem;
-		height: 14rem;
-		background: var(--bg);
-		border-radius: 0.5rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -278,25 +261,12 @@
 
 	.circle {
 		position: absolute;
-		left: -0.5rem;
-		bottom: -0.5rem;
-		width: 2rem;
-		height: 2rem;
+		left: $offset;
+		bottom: $offset;
+		width: $circle-size;
+		height: $circle-size;
 		border-radius: 50%;
 		border: 2.5px solid var(--txt);
 		background: var(--bg-3);
-		// animation: 4s linear 1 breathe;
-	}
-
-	@keyframes breathe {
-		0% {
-			left: 0;
-		}
-		50% {
-			left: 20rem;
-		}
-		100% {
-			left: 0;
-		}
 	}
 </style>
