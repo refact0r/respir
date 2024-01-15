@@ -148,7 +148,7 @@
 </script>
 
 <svelte:head>
-	<title>Breathe</title>
+	<title>Breathe - Zen Rhythm</title>
 	<meta name="description" content="" />
 </svelte:head>
 

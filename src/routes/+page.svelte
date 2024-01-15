@@ -32,8 +32,8 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Zen Rhythm</title>
+	<meta name="description" content="" />
 </svelte:head>
 
 <section>
