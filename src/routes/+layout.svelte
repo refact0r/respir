@@ -44,7 +44,7 @@
 		flex-direction: column;
 		padding: 0.8rem;
 		gap: 0.8rem;
-		min-height: 50vh;
+		min-height: 80vh;
 		z-index: 1;
 		padding-top: 3.6rem;
 	}
