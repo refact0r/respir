@@ -73,6 +73,7 @@
 			timer = window.requestAnimationFrame(resumeFrame);
 			forestWav.play();
 		} else {
+			stopAudio();
 		}
 	}
 
