@@ -31,45 +31,48 @@
 	};
 
 	let play = false;
-	let cycle = 0;
-	let step = 0;
-	let text = 'click to start';
+	let cycle = -1;
+	let step = -1;
 	let timer;
 
+	let count = 0;
+	let text = 'click to start';
+
+	// when play/pause is clicked
 	function togglePlay() {
 		play = !play;
-		if (cycle === 0) {
-			start();
+		if (cycle === -1) {
+			cycle = 0;
+			count = 3;
+			text = 'get ready';
+			timer = setInterval(tick, 1000);
 			return;
 		}
 		if (play) {
-			timer = setTimeout(next, exercise.routine[step].duration * 1000);
+			timer = setInterval(tick, 1000);
 		} else {
-			clearTimeout(timer);
+			clearInterval(timer);
 		}
 	}
-
-	function start() {
-		cycle = 1;
-		step = 0;
-		text = exercise.routine[step].name;
-		timer = setTimeout(next, exercise.routine[step].duration * 1000);
-	}
-
-	function next() {
-		step++;
-		if (step === exercise.routine.length) {
-			step = 0;
-			cycle++;
-		}
-		if (cycle === exercise.cycles + 1) {
-			cycle = 0;
-			play = false;
-			text = 'click to start';
+	// main event loop
+	function tick() {
+		count--;
+		if (cycle === -1) {
+			if (count === 0) {
+				cycle++;
+			}
 			return;
 		}
-		text = exercise.routine[step].name;
-		timer = setTimeout(next, exercise.routine[step].duration * 1000);
+		if (count === 0) {
+			if (step === exercise.routine.length - 1) {
+				cycle++;
+				step = 0;
+			} else {
+				step++;
+			}
+			count = exercise.routine[step].duration;
+			text = exercise.routine[step].name;
+		}
 	}
 </script>
 
@@ -82,6 +85,8 @@
 
 <main>
 	<div class="middle">
+		<div class="count">{cycle >= 0 ? cycle : ''}</div>
+		<div class="count">{cycle >= 0 ? count : ''}</div>
 		<div class="text">{text}</div>
 	</div>
 	<div class="bottom">
