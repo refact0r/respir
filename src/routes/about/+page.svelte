@@ -4,13 +4,13 @@
 </svelte:head>
 
 <main>
-	<h1>About Zen Rhythm</h1>
+	<h1>about respir</h1>
 	<p>
-		Zen Rhythm is a web app designed to help people relax and calm down from stress in their lives.
+		respir is a web app designed to help people relax and calm down from stress in their lives
 	</p>
 	<p>
-		This web app was created by shibest, refact0r, and ben-6 for the Interlake Programming Club
-		Hackathon.
+		this web app was created by shibest, refact0r, and ben-6 for the interlake programming club
+		hackathon.
 	</p>
 </main>
 

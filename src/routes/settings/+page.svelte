@@ -17,7 +17,7 @@
 <main>
 	<h1>settings</h1>
 	<div class="sliders">
-		<label for="ambienceVolume">Ambience Volume:</label>
+		<label for="ambienceVolume">ambience volume:</label>
 		<input
 			class="slider"
 			type="range"
@@ -29,7 +29,7 @@
 			on:input={handleAmbienceVolumeChange}
 		/>
 
-		<label for="speechVolume">Speech Volume:</label>
+		<label for="speechVolume">speech volume:</label>
 		<input
 			class="slider"
 			type="range"
