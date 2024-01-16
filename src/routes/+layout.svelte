@@ -33,8 +33,8 @@
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		padding-top: 4rem;
-		padding-bottom: 4rem;
+		padding-top: 2rem;
+		padding-bottom: 2rem;
 	}
 
 	.sticky {
@@ -49,7 +49,7 @@
 		overflow: hidden;
 		top: 0;
 		left: 0;
-		z-index: -1;
+		z-index: -2;
 	}
 	.bubble {
 		position: absolute;
