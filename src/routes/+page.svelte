@@ -43,8 +43,11 @@
 			</div>
 
 			<div class="buttons">
-				<a href="settings" class="icon-button"><IconGear style="font-size: 1.5rem;" /></a>
-				<a href="about" class="icon-button"><IconInfo style="font-size: 1.5rem;" /></a>
+				<a href="settings" class="icon-button" title="settings"
+					><IconGear style="font-size: 1.5rem;" /></a
+				>
+				<a href="about" class="icon-button" title="about"><IconInfo style="font-size: 1.5rem;" /></a
+				>
 			</div>
 		</div>
 
@@ -54,7 +57,7 @@
 		<h2>exercises</h2>
 		<div class="exercises">
 			{#each Object.keys(exercises) as id}
-				<a href="/{id}" class="exercise">
+				<a href="/{id}" class="exercise" title="{id} breathing">
 					<div class="left">
 						<h3>{exercises[id].name}</h3>
 						<p>{exercises[id].cycles} cycles - {totalTime(exercises[id])}</p>
@@ -65,7 +68,7 @@
 					</button>
 				</a>
 			{/each}
-			<a href="/hold-test" class="exercise">
+			<a href="/hold-test" class="exercise" title="breath holding test">
 				<div class="left">
 					<h3>breath holding test</h3>
 					<p>best time - {format(bestTime)}</p>
@@ -76,7 +79,7 @@
 
 		<h2>custom exercises</h2>
 		<a href="/create" class="exercise create">
-			<IconPlus /><span>create new</span>
+			<IconPlus /><span>create custom exercise</span>
 		</a>
 	</section>
 </main>
@@ -92,6 +95,7 @@
 	h1 {
 		font-size: 2.5rem;
 		margin: 0;
+		cursor: default;
 	}
 
 	h2 {
@@ -136,6 +140,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: start;
+		transition: 0.2s;
 
 		h3 {
 			margin: 0;
@@ -159,6 +164,10 @@
 			span {
 				margin-left: 0.5rem;
 			}
+		}
+
+		&:hover:not(:has(button:hover)) {
+			background-color: var(--bg-3);
 		}
 	}
 

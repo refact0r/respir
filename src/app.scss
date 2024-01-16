@@ -49,4 +49,25 @@ button {
 	background-color: var(--bg-2);
 	backdrop-filter: blur(3px);
 	border-radius: 50%;
+	transition: 0.2s ease-in-out;
+
+	&:hover {
+		background-color: var(--bg-3);
+		animation: spin 1s ease-out infinite;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
 }
