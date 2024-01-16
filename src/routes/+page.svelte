@@ -60,7 +60,7 @@
 			<a href="/hold-test" class="exercise">
 				<div class="left">
 					<h2>breath holding test</h2>
-					<p>best time: {format(bestTime)}</p>
+					<p>best time - {format(bestTime)}</p>
 					<p>Test your breath-holding capacity</p>
 				</div>
 			</a>
