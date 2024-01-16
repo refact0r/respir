@@ -3,7 +3,8 @@
 	import IconPause from '~icons/ph/pause-duotone';
 	import IconHouse from '~icons/ph/house-duotone';
 	import IconReset from '~icons/ph/arrow-clockwise-duotone';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { ambienceVolume, speechVolume } from '../stores/volumeData.js';
 
 	let inWav, outWav, holdWav, forestWav;
 
@@ -16,6 +17,19 @@
 		outWav = new Audio('/audio/breathe-out.wav');
 		holdWav = new Audio('/audio/hold.wav');
 		forestWav = new Audio('/audio/forest.mp3');
+		console.log($ambienceVolume);
+		console.log($speechVolume);
+		inWav.volume = $speechVolume;
+		outWav.volume = $speechVolume;
+		holdWav.volume = $speechVolume;
+		forestWav.volume = $ambienceVolume;
+	});
+
+	onDestroy(() => {
+		if (forestWav) {
+			forestWav.pause();
+			forestWav = null;
+		}
 	});
 
 	if (exercise.animation === 'circle') {
