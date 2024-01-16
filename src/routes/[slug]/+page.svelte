@@ -9,7 +9,6 @@
 	import Modal, { bind } from 'svelte-simple-modal';
 	import Popup from './Popup.svelte';
 	const modal = writable(null);
-	
 
 	let inWav, outWav, holdWav, forestWav;
 
@@ -167,15 +166,20 @@
 					if (step === exercise.routine.length - 1) {
 						step = 0;
 						cycle++;
-						
-						
+
 						// all cycles complete
 						if (cycle == exercise.cycles) {
 							cycle = exercise.cycles;
 							reset();
 							let cycleDuration = exercise.routine.reduce((sum, curr) => sum + curr.duration, 0);
 							let secs = cycleDuration * exercise.cycles;
-							modal.set(bind(Popup, { time: formatTime(secs), cycles: exercise.cycles, exercise_name: exercise.name }))
+							modal.set(
+								bind(Popup, {
+									time: formatTime(secs),
+									cycles: exercise.cycles,
+									exercise_name: exercise.name
+								})
+							);
 							return;
 						}
 					} else {
@@ -273,9 +277,6 @@
 		</div>
 		<div class="total">{exercise.cycles}</div>
 	</div>
-	<div class="sub-top">
-		<h1>{exercise.name}</h1>
-	</div>
 	<div class="middle">
 		<div class="visualizer">
 			<div class={exercise.animation === 'box' ? 'box' : 'loop'}>
@@ -300,27 +301,27 @@
 	</div>
 	<div class="bottom">
 		<a class="icon-button side" href="/">
-			<IconHouse style="font-size: 1.5rem;" />
+			<IconHouse style="font-size: 1.3rem;" />
 		</a>
 		<button class="icon-button play" on:click={togglePlay}>
 			{#if play}
-				<IconPause style="font-size: 2rem;" />
+				<IconPause style="font-size: 1.8rem;" />
 			{:else}
-				<IconPlay style="font-size: 2rem;" />
+				<IconPlay style="font-size: 1.8rem;" />
 			{/if}
 		</button>
 		<button class="icon-button side" on:click={reset}>
-			<IconReset style="font-size: 1.5rem;" />
+			<IconReset style="font-size: 1.3rem;" />
 		</button>
 		<!-- <button class="side-button" on:click={toggleSettings}>
-			<IconGear style="font-size: 1.5rem;" />
+			<IconGear style="font-size: 1.3rem;" />
 		</button> -->
 	</div>
 
 	<Modal
 		show={$modal}
 		styleBg={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}
-		styleWindow={{ boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.15)' }}		
+		styleWindow={{ boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.15)' }}
 	></Modal>
 </main>
 
@@ -382,7 +383,7 @@
 	}
 
 	.visualizer {
-		margin-top: 2rem;
+		margin-top: 1rem;
 	}
 
 	.text {
@@ -390,7 +391,7 @@
 	}
 
 	.icon-button.play {
-		padding: 1.6rem;
+		padding: 1.4rem;
 
 		&:active {
 			animation: none;

@@ -41,9 +41,9 @@
 			on:input={handleSpeechVolumeChange}
 		/>
 	</div>
-	<a href="/" class="icon-button" title="submit settings and return home"
-		><IconCheck style="font-size: 1.5rem;" /></a
-	>
+	<a href="/" class="icon-button" title="submit settings and return home">
+		<IconCheck style="font-size: 1.3rem;" />
+	</a>
 </main>
 
 <style lang="scss">
