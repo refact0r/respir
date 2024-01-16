@@ -9,7 +9,10 @@
 	let bestTime = 60;
 
 	function setCycles(id) {
-		let cycles = prompt('cycles', exercises[id].cycles);
+		let cycles = prompt(
+			'Please enter the desired number of cycles for this breathing exercise. The default is 10 cycles.',
+			exercises[id].cycles
+		);
 
 		if (cycles) {
 			exercises[id].cycles = cycles;
@@ -63,7 +66,11 @@
 						<p>{exercises[id].cycles} cycles - {totalTime(exercises[id])}</p>
 						<p>{exercises[id].description}</p>
 					</div>
-					<button class="icon-button" on:click|preventDefault={() => setCycles(id)}>
+					<button
+						class="icon-button"
+						title="edit number of cycles"
+						on:click|preventDefault={() => setCycles(id)}
+					>
 						<IconSlider style="font-size: 1rem;" />
 					</button>
 				</a>
@@ -78,7 +85,7 @@
 		</div>
 
 		<h2>custom exercises</h2>
-		<a href="/create" class="exercise create">
+		<a href="/create" class="exercise create" title="create new custom exercise">
 			<IconPlus /><span>create custom exercise</span>
 		</a>
 	</section>

@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>respir: breath hold</title>
+	<title>respir: breath hold test</title>
 	<meta name="description" content="" />
 </svelte:head>
 
