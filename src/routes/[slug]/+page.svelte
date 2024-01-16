@@ -51,7 +51,7 @@
 	let prevSec, prevStep;
 	let pausedSec, pausedStep;
 
-	let size = 20;
+	let size = 18;
 	let trackSize = 1;
 	let circleSize = 2.5;
 	let offset = (circleSize - trackSize) / -2 - 1;
@@ -308,7 +308,6 @@
 	}
 
 	.top {
-		padding: 2rem;
 		display: flex;
 		gap: 1rem;
 		align-items: center;
@@ -347,18 +346,18 @@
 
 		flex: 1;
 		flex-direction: column;
-		gap: 3rem;
+		gap: 2rem;
+		margin: 2rem;
 	}
 
 	.bottom {
-		padding: 2rem;
 		display: flex;
 		align-items: center;
 		gap: 2rem;
 	}
 
 	.visualizer {
-		margin-top: 3rem;
+		margin-top: 2rem;
 	}
 
 	.text {
@@ -373,7 +372,7 @@
 		}
 	}
 
-	$size: 20rem;
+	$size: 18rem;
 	$track-size: 1rem;
 	$circle-size: 2.5rem;
 	$offset: calc(-1rem * ($circle-size - $track-size) / 2rem - 1rem);
