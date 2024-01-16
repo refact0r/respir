@@ -18,9 +18,19 @@
 				type: 'hold'
 			},
 			{
+				name: 'breathe in',
+				duration: 4,
+				type: 'in'
+			},
+			{
 				name: 'breathe out',
 				duration: 8,
 				type: 'out'
+			},
+			{
+				name: 'hold',
+				duration: 5,
+				type: 'hold'
 			}
 		]
 	};

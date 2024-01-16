@@ -38,7 +38,7 @@
 	let prevSec, prevStep;
 	let pausedSec, pausedStep;
 
-	let boxSize = 20;
+	let size = 20;
 	let trackSize = 1;
 	let circleSize = 2.5;
 	let offset = (circleSize - trackSize) / -2 - 1;
@@ -82,8 +82,12 @@
 		cycle = -2;
 		count = 0;
 		text = 'click play to start';
-		circleElem.style.left = `${offset}rem`;
-		circleElem.style.bottom = `${offset}rem`;
+		if (exercise.animation === 'box') {
+			circleElem.style.left = `${offset}rem`;
+			circleElem.style.bottom = `${offset}rem`;
+		} else {
+			circleElem.style.transform = `rotate(0deg)`;
+		}
 		countElem.style.opacity = 1;
 		textElem.style.opacity = 1;
 	}
@@ -171,7 +175,7 @@
 	function animateBox(time) {
 		const elapsedStep = time - prevStep;
 		const stepDuration = exercise.routine[step].duration;
-		const distance = boxSize - trackSize;
+		const distance = size - trackSize;
 		const increasing = (elapsedStep / 1000 / stepDuration) * distance + offset;
 		const decreasing = distance - (elapsedStep / 1000 / stepDuration) * distance + offset;
 		switch (step) {
@@ -308,7 +312,7 @@
 	.value {
 		height: 100%;
 		width: 0%;
-		background: var(--bg-3);
+		background: var(--bg-4);
 	}
 
 	.cycle {
@@ -419,15 +423,17 @@
 	}
 
 	$tick-width: 3px;
-	$tick-height: 1.5rem;
+	$tick-height: 1rem;
 
 	.tick {
 		position: absolute;
-		left: calc($size / 2 - $track-size - 1.5px);
-		bottom: -1.25rem;
+		left: calc($size / 2 - $track-size - $tick-width / 2);
+		bottom: calc(-1rem * ($tick-height - $track-size) / 2rem - 1rem);
 		width: $tick-width;
 		height: $tick-height;
 		border-radius: $tick-width;
+		// border: 2.5px solid var(--txt);
+		background: var(--bg-4);
 		background: var(--txt);
 		transform-origin: calc($tick-width / 2) calc(-1 * ($size - $tick-height - $track-size) / 2);
 	}
