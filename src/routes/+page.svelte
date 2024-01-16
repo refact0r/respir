@@ -80,7 +80,7 @@
 				<div class="left">
 					<h3>breath holding test</h3>
 					<p>best time - {format(bestTime)}</p>
-					<p>Test your breath-holding capacity</p>
+					<p>test your breath-holding capacity</p>
 				</div>
 			</a>
 		</div>
