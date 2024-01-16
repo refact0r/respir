@@ -1,11 +1,17 @@
 <script>
 	import '../app.scss';
+	import { fade } from 'svelte/transition';
+	import { page } from '$app/stores';
+
+	export let data;
 </script>
 
 <div class="app">
-	<div class="main">
-		<slot />
-	</div>
+	{#key data.pathname}
+		<div class="main" in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}>
+			<slot />
+		</div>
+	{/key}
 	<section class="sticky">
 		<div class="bubbles">
 			{#each Array(13) as _, i}
@@ -17,17 +23,16 @@
 
 <style lang="scss">
 	.app {
-		display: flex;
-		flex-direction: column;
 		height: 100%;
 		min-height: 100vh;
 	}
 
 	.main {
+		height: 100%;
+		min-height: 100vh;
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		z-index: 1;
 	}
 
 	.sticky {
@@ -39,10 +44,10 @@
 		position: fixed;
 		width: 100%;
 		height: 100%;
-		z-index: 0;
 		overflow: hidden;
 		top: 0;
 		left: 0;
+		z-index: -1;
 	}
 	.bubble {
 		position: absolute;
