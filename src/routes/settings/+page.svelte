@@ -24,6 +24,7 @@
 			min="0"
 			max="1"
 			step="0.05"
+			title="change volume of ambient sounds"
 			bind:value={$ambienceVolume}
 			on:input={handleAmbienceVolumeChange}
 		/>
@@ -35,11 +36,14 @@
 			min="0"
 			max="1"
 			step="0.05"
+			title="change volume of voice"
 			bind:value={$speechVolume}
 			on:input={handleSpeechVolumeChange}
 		/>
 	</div>
-	<a href="/" class="icon-button"><IconCheck style="font-size: 1.5rem;" /></a>
+	<a href="/" class="icon-button" title="submit settings and return home"
+		><IconCheck style="font-size: 1.5rem;" /></a
+	>
 </main>
 
 <style lang="scss">

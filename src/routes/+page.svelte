@@ -85,7 +85,7 @@
 		</div>
 
 		<h2>custom exercises</h2>
-		<a href="/create" class="exercise create">
+		<a href="/create" class="exercise create" title="create new custom exercise">
 			<IconPlus /><span>create custom exercise</span>
 		</a>
 	</section>
