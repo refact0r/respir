@@ -2,13 +2,14 @@
 	import IconPlay from '~icons/ph/play-duotone';
 	import IconPause from '~icons/ph/pause-duotone';
 	import IconHouse from '~icons/ph/house-duotone';
-	// import IconGear from '~icons/ph/gear-duotone';
 	import IconReset from '~icons/ph/arrow-clockwise-duotone';
 	import { onMount } from 'svelte';
 
 	let inWav, outWav, holdWav, forestWav;
 
-	export let exercise;
+	export let data;
+
+	let exercise = data.exercise;
 
 	onMount(() => {
 		inWav = new Audio('/audio/breathe-in.wav');
@@ -266,17 +267,17 @@
 		</div>
 	</div>
 	<div class="bottom">
-		<a class="side-button" href="/">
+		<a class="icon-button side" href="/">
 			<IconHouse style="font-size: 1.5rem;" />
 		</a>
-		<button class="play-button" on:click={togglePlay}>
+		<button class="icon-button play" on:click={togglePlay}>
 			{#if play}
 				<IconPause style="font-size: 2rem;" />
 			{:else}
 				<IconPlay style="font-size: 2rem;" />
 			{/if}
 		</button>
-		<button class="side-button" on:click={reset}>
+		<button class="icon-button side" on:click={reset}>
 			<IconReset style="font-size: 1.5rem;" />
 		</button>
 		<!-- <button class="side-button" on:click={toggleSettings}>
@@ -350,12 +351,7 @@
 		font-size: 2rem;
 	}
 
-	.side-button,
-	.play-button {
-		@include iconButton;
-	}
-
-	.play-button {
+	.icon-button.play {
 		padding: 1.6rem;
 	}
 

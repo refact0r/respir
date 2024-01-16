@@ -1,18 +1,17 @@
 <svelte:head>
-	<title>Settings - Zen Rhythm</title>
+	<title></title>
 	<meta name="description" content="" />
 </svelte:head>
 
 <main>
-	<h1>Settings</h1>
-	<p>WIP - Themes, Volume, etc.</p>
+	<h1>settings</h1>
 </main>
 
 <style lang="scss">
 	main {
 		flex: 1;
-		display: flex;
 		flex-direction: column;
-		align-items: center;
+
+		@include flexCenter;
 	}
 </style>
