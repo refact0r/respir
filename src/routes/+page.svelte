@@ -41,12 +41,14 @@
 				<p class="description">breathing exercises to help you relax, focus, or sleep.</p>
 			</div>
 
-			<a href="settings" class="icon-button"><IconGear style="font-size: 1.5rem;" /></a>
+			<a href="settings" class="icon-button" title="settings">
+				<IconGear style="font-size: 1.5rem;" />
+			</a>
 		</div>
 
 		<div class="exercises">
 			{#each Object.keys(exercises) as id}
-				<a href="/{id}" class="exercise">
+				<a href="/{id}" class="exercise" title="{id} breathing">
 					<div class="left">
 						<h2>{exercises[id].name}</h2>
 						<p>{exercises[id].cycles} cycles - {totalTime(exercises[id])}</p>
@@ -57,7 +59,7 @@
 					</button>
 				</a>
 			{/each}
-			<a href="/hold-test" class="exercise">
+			<a href="/hold-test" class="exercise" title="breath holding test">
 				<div class="left">
 					<h2>breath holding test</h2>
 					<p>best time - {format(bestTime)}</p>
@@ -67,7 +69,7 @@
 		</div>
 
 		<h3>custom exercises</h3>
-		<a href="/create" class="exercise create">
+		<a href="/create" class="exercise create" title="create new breathing exercise">
 			<IconPlus /><span>create new</span>
 		</a>
 	</section>
@@ -79,11 +81,35 @@
 		flex-direction: column;
 
 		@include flexCenter;
+		animation: fadeIn ease 2s;
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 
 	h1 {
 		font-size: 2.5rem;
 		margin: 0;
+		cursor: default;
+	}
+
+	.icon-button {
+		background-color: var(--bg-2);
+		transition: 0.2s ease-in-out;
+	}
+	.icon-button:hover {
+		background-color: var(--bg-3);
+		animation: spin 4s linear infinite;
+	}
+	@keyframes spin {
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	.head {
@@ -116,6 +142,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: start;
+		transition: 0.2s;
 
 		h2 {
 			margin: 0;
@@ -139,6 +166,10 @@
 				margin-left: 0.5rem;
 			}
 		}
+	}
+
+	.exercise:hover {
+		background-color: var(--bg-3);
 	}
 
 	.start-button {
