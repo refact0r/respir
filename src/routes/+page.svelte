@@ -46,11 +46,12 @@
 			</div>
 
 			<div class="buttons">
-				<a href="settings" class="icon-button" title="settings"
-					><IconGear style="font-size: 1.5rem;" /></a
-				>
-				<a href="about" class="icon-button" title="about"><IconInfo style="font-size: 1.5rem;" /></a
-				>
+				<a href="settings" class="icon-button" title="settings">
+					<IconGear style="font-size: 1.3rem;" />
+				</a>
+				<a href="about" class="icon-button" title="about">
+					<IconInfo style="font-size: 1.3rem;" />
+				</a>
 			</div>
 		</div>
 
@@ -102,6 +103,7 @@
 	h1 {
 		font-size: 2.5rem;
 		margin: 0;
+		font-weight: 700;
 		cursor: default;
 	}
 
@@ -116,7 +118,7 @@
 		gap: 3rem;
 		justify-content: space-between;
 		align-items: start;
-		margin-bottom: 2rem;
+		margin: 0.5rem 0 2rem 0;
 	}
 
 	.description {
@@ -136,7 +138,6 @@
 	}
 
 	.exercise {
-		font-size: 1rem;
 		padding: 1rem;
 		background-color: var(--bg-2);
 		backdrop-filter: blur(6px);
