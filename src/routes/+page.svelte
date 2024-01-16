@@ -8,6 +8,21 @@
 
 	let bestTime = 60;
 
+	let fakeActivity = [
+		{ value: 3, date: new Date('2024-01-01') },
+		{ value: 12, date: new Date('2024-01-02') },
+		{ value: 4, date: new Date('2024-01-03') },
+		{ value: 6, date: new Date('2024-01-04') },
+		{ value: 8, date: new Date('2024-01-05') },
+		{ value: 10, date: new Date('2024-01-06') },
+		{ value: 7, date: new Date('2024-01-07') },
+		{ value: 2, date: new Date('2024-01-08') },
+		{ value: 5, date: new Date('2024-01-09') },
+		{ value: 9, date: new Date('2024-01-10') },
+		{ value: 1, date: new Date('2024-01-11') }
+	];
+	let largest = Math.max(...fakeActivity.map((x) => x.value));
+
 	function setCycles(id) {
 		let cycles = prompt(
 			'Please enter the desired number of cycles for this breathing exercise. The default is 10 cycles.',
@@ -22,13 +37,19 @@
 	function totalTime(exercise) {
 		let cycleDuration = exercise.routine.reduce((sum, curr) => sum + curr.duration, 0);
 		let secs = cycleDuration * exercise.cycles;
-		return format(secs);
+		return formatTime(secs);
 	}
 
-	function format(secs) {
+	function formatTime(secs) {
 		let mins = Math.floor(secs / 60);
 		let remainder = secs % 60;
 		return `${mins}:${remainder.toString().padStart(2, '0')}`;
+	}
+
+	function formatDate(date) {
+		let month = date.getMonth() + 1;
+		let day = date.getDate();
+		return `${month}/${day}`;
 	}
 </script>
 
@@ -56,7 +77,14 @@
 		</div>
 
 		<h2>activity</h2>
-		<div class="graph"></div>
+		<div class="graph">
+			{#each fakeActivity as { value, date }}
+				<div class="day">
+					<div class="bar" style="height: {(value / largest) * 100}%;"></div>
+					<div class="label">{formatDate(date)}</div>
+				</div>
+			{/each}
+		</div>
 
 		<h2>exercises</h2>
 		<div class="exercises">
@@ -79,7 +107,7 @@
 			<a href="/hold-test" class="exercise" title="breath holding test">
 				<div class="left">
 					<h3>breath holding test</h3>
-					<p>best time - {format(bestTime)}</p>
+					<p>best time - {formatTime(bestTime)}</p>
 					<p>test your breath-holding capacity</p>
 				</div>
 			</a>
@@ -186,5 +214,26 @@
 		background-color: var(--bg-2);
 		backdrop-filter: blur(6px);
 		border-radius: 1rem;
+		padding: 1.5rem 0 1rem 0;
+
+		display: flex;
+		justify-content: space-around;
+		align-items: flex-end;
+	}
+
+	.day {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: flex-end;
+		gap: 0.3rem;
+		height: 100%;
+	}
+
+	.bar {
+		width: 1rem;
+		background-color: var(--bg-3);
+		margin: 0 0.1rem;
+		border-radius: 0.5rem;
 	}
 </style>
