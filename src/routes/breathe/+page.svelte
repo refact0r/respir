@@ -240,7 +240,7 @@
 		</div>
 		<div class="text" bind:this={textElem}>
 			{#if text === 'click play to start'}
-				click <span class="textIcon">
+				click <span class="text-icon">
 					<IconPlay style="font-size: 1.4rem;" />
 				</span> to start
 			{:else}
@@ -346,12 +346,6 @@
 
 	.text {
 		font-size: 2rem;
-	}
-
-	.textIcon {
-		display: inline-block;
-		vertical-align: middle;
-		line-height: 0.8;
 	}
 
 	.side-button,

@@ -13,10 +13,10 @@
 body {
 	font-family: 'Quicksand', sans-serif;
 	font-family: 'Outfit', sans-serif;
-	// font-family: 'Satoshi', sans-serif;
+	font-family: 'Satoshi', sans-serif;
 	// font-family: 'Epilogue', sans-serif;
 	// font-family: 'Chillax', sans-serif;
-	font-weight: 300;
+	// font-weight: 300;
 	color: var(--txt);
 	background: var(--bg-1);
 	margin: 0;
@@ -27,7 +27,7 @@ h2,
 h3,
 h4,
 h5 {
-	font-weight: 500;
+	// font-weight: 500;
 }
 
 button {
@@ -40,4 +40,10 @@ button {
 	&:hover {
 		cursor: pointer;
 	}
+}
+
+.text-icon {
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 0.8;
 }
