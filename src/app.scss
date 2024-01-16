@@ -63,11 +63,14 @@ button {
 	}
 }
 
-@keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
+.modal-bg {
+	background: none;
+}
+
+.modal-window {
+	background: var(--bg-2);
+	backdrop-filter: blur(3px);
+	border-radius: 1rem;
+	padding: 2rem;
+	font-size: 1.2rem;
 }

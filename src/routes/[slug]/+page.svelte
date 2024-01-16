@@ -318,9 +318,7 @@
 		</button> -->
 	</div>
 
-	<Modal
-		show={$modal}
-	></Modal>
+	<!-- <Modal show={$modal} unstyled={true} classBg="modal-bg" classWindow="modal-window"></Modal> -->
 </main>
 
 <style lang="scss">

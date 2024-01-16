@@ -43,27 +43,27 @@ export let exercises = {
 	box: {
 		name: 'box breathing',
 		description: 'relieves stress and improves mood',
-		cycles: 10,
+		cycles: 1,
 		animation: 'box',
 		routine: [
 			{
 				name: 'breathe in',
-				duration: 4,
+				duration: 1,
 				type: 'in'
 			},
 			{
 				name: 'hold',
-				duration: 4,
+				duration: 1,
 				type: 'hold'
 			},
 			{
 				name: 'breathe out',
-				duration: 4,
+				duration: 1,
 				type: 'out'
 			},
 			{
 				name: 'hold',
-				duration: 4,
+				duration: 1,
 				type: 'hold'
 			}
 		]
