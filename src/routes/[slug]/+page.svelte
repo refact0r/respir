@@ -367,6 +367,10 @@
 
 	.icon-button.play {
 		padding: 1.6rem;
+
+		&:active {
+			animation: none;
+		}
 	}
 
 	$size: 20rem;
@@ -410,7 +414,6 @@
 		bottom: $offset;
 		transform-origin: calc($circle-size / 2) calc(-1 * ($size - $circle-size - $track-size) / 2);
 		transform: rotate(0deg);
-		// animation: 3s spin infinite linear;
 	}
 
 	@keyframes spin {
