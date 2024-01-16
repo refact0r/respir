@@ -33,6 +33,8 @@
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
+		padding-top: 4rem;
+		padding-bottom: 4rem;
 	}
 
 	.sticky {
