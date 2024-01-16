@@ -1,6 +1,7 @@
 <script>
 	import IconAir from '~icons/ph/wind-duotone';
 	import IconGear from '~icons/ph/gear-duotone';
+	import IconInfo from '~icons/ph/info-duotone';
 	import IconSlider from '~icons/ph/sliders-horizontal-duotone';
 	import IconPlus from '~icons/ph/plus';
 	import { exercises } from '$lib/exercises.js';
@@ -41,14 +42,21 @@
 				<p class="description">breathing exercises to help you relax, focus, or sleep.</p>
 			</div>
 
-			<a href="settings" class="icon-button"><IconGear style="font-size: 1.5rem;" /></a>
+			<div class="buttons">
+				<a href="settings" class="icon-button"><IconGear style="font-size: 1.5rem;" /></a>
+				<a href="about" class="icon-button"><IconInfo style="font-size: 1.5rem;" /></a>
+			</div>
 		</div>
 
+		<h2>activity</h2>
+		<div class="graph"></div>
+
+		<h2>exercises</h2>
 		<div class="exercises">
 			{#each Object.keys(exercises) as id}
 				<a href="/{id}" class="exercise">
 					<div class="left">
-						<h2>{exercises[id].name}</h2>
+						<h3>{exercises[id].name}</h3>
 						<p>{exercises[id].cycles} cycles - {totalTime(exercises[id])}</p>
 						<p>{exercises[id].description}</p>
 					</div>
@@ -59,14 +67,14 @@
 			{/each}
 			<a href="/hold-test" class="exercise">
 				<div class="left">
-					<h2>breath holding test</h2>
+					<h3>breath holding test</h3>
 					<p>best time - {format(bestTime)}</p>
 					<p>Test your breath-holding capacity</p>
 				</div>
 			</a>
 		</div>
 
-		<h3>custom exercises</h3>
+		<h2>custom exercises</h2>
 		<a href="/create" class="exercise create">
 			<IconPlus /><span>create new</span>
 		</a>
@@ -86,11 +94,18 @@
 		margin: 0;
 	}
 
+	h2 {
+		margin: 1rem 0 0.5rem 0;
+		font-size: 1.1rem;
+		font-weight: 500;
+	}
+
 	.head {
 		display: flex;
 		gap: 3rem;
 		justify-content: space-between;
 		align-items: start;
+		margin-bottom: 2rem;
 	}
 
 	.description {
@@ -98,17 +113,22 @@
 		margin: 1rem 0 0 0;
 	}
 
+	.buttons {
+		display: flex;
+		gap: 1rem;
+	}
+
 	.exercises {
 		display: grid;
 		grid-template-columns: 30rem 30rem;
 		gap: 1rem;
-		margin: 3rem 0 2rem 0;
 	}
 
 	.exercise {
 		font-size: 1rem;
 		padding: 1rem;
 		background-color: var(--bg-2);
+		backdrop-filter: blur(6px);
 		border-radius: 1rem;
 		text-decoration: none;
 		color: inherit;
@@ -117,9 +137,10 @@
 		justify-content: space-between;
 		align-items: start;
 
-		h2 {
+		h3 {
 			margin: 0;
 			font-size: 1.3rem;
+			font-weight: 600;
 		}
 
 		p {
@@ -141,42 +162,11 @@
 		}
 	}
 
-	.start-button {
-		padding: 1rem;
-		background-color: hsla(208, 100%, 97%, 0.6);
-		border-radius: 0.5rem;
-		text-decoration: none;
-		color: rgb(18, 29, 27);
-		cursor: pointer;
-		transition: 0.25s;
-	}
-
-	.start-button span {
-		cursor: pointer;
-		transition: 0.5s;
-		margin-right: -0.5rem;
-	}
-
-	.start-button span:after {
-		content: '▶';
-		position: relative;
-		opacity: 0;
-		right: 0.5rem;
-		margin-right: -0.25rem;
-		transition: 0.5s;
-	}
-
-	.start-button:hover span {
-		padding-right: 25px;
-	}
-
-	.start-button:hover span:after {
-		opacity: 1;
-		right: -0.5rem;
-		position: relative;
-	}
-
-	.start-button:hover {
-		background-color: hsla(0, 0%, 100%, 0.8);
+	.graph {
+		height: 10rem;
+		width: 100%;
+		background-color: var(--bg-2);
+		backdrop-filter: blur(6px);
+		border-radius: 1rem;
 	}
 </style>

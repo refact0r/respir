@@ -215,7 +215,7 @@
 			if (count === 1) {
 				textElem.style.opacity = progress;
 				if (step === exercise.routine.length - 1 && cycle < exercise.cycles) {
-					barElem.style.width = `${Math.min((cycle / exercise.cycles) * 100 + (((elapsedSec - 800) / 200) * 100) / exercise.cycles, ((cycle+1) / exercise.cycles) * 100)}%`;
+					barElem.style.width = `${Math.min((cycle / exercise.cycles) * 100 + (((elapsedSec - 800) / 200) * 100) / exercise.cycles, ((cycle + 1) / exercise.cycles) * 100)}%`;
 				}
 			}
 		} else if (elapsedSec <= 200) {
@@ -303,7 +303,8 @@
 	}
 
 	.bar {
-		background: var(--bg-2);
+		background-color: var(--bg-2);
+		backdrop-filter: blur(3px);
 		border: none;
 		border-radius: 1rem;
 		width: 12rem;
@@ -314,7 +315,7 @@
 	.value {
 		height: 100%;
 		width: 0%;
-		background: var(--bg-4);
+		background-color: var(--bg-4);
 	}
 
 	.cycle {
@@ -383,7 +384,8 @@
 		height: $circle-size;
 		border-radius: 50%;
 		border: 2.5px solid var(--txt);
-		background: var(--bg-3);
+		background-color: var(--bg-3);
+		backdrop-filter: blur(3px);
 	}
 
 	.box .circle {
@@ -430,8 +432,9 @@
 		height: $tick-height;
 		border-radius: $tick-width;
 		// border: 2.5px solid var(--txt);
-		background: var(--bg-4);
+		background-color: var(--bg-4);
 		background: var(--txt);
 		transform-origin: calc($tick-width / 2) calc(-1 * ($size - $tick-height - $track-size) / 2);
+		z-index: -1;
 	}
 </style>
