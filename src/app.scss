@@ -49,11 +49,13 @@ button {
 	background-color: var(--bg-2);
 	backdrop-filter: blur(3px);
 	border-radius: 50%;
-	transition: 0.2s ease-in-out;
+	transition:
+		background-color 0.2s ease-in-out,
+		transform 1s ease-out;
 
 	&:hover {
+		transform: rotate(360deg);
 		background-color: var(--bg-3);
-		animation: spin 1s ease-out infinite;
 	}
 }
 
@@ -63,11 +65,5 @@ button {
 	}
 	100% {
 		opacity: 1;
-	}
-}
-
-@keyframes spin {
-	100% {
-		transform: rotate(360deg);
 	}
 }
