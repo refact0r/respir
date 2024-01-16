@@ -243,7 +243,7 @@
 </script>
 
 <svelte:head>
-	<title>Breathe - Zen Rhythm</title>
+	<title>respir: {exercise.name}</title>
 	<meta name="description" content="" />
 </svelte:head>
 

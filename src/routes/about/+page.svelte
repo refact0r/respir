@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>About - Zen Rhythm</title>
+	<title>respir: about</title>
 	<meta name="description" content="" />
 </svelte:head>
 
