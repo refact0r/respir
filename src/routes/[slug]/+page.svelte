@@ -5,6 +5,11 @@
 	import IconReset from '~icons/ph/arrow-clockwise-duotone';
 	import { onMount, onDestroy } from 'svelte';
 	import { ambienceVolume, speechVolume } from '../../lib/stores/volumeData.js';
+	import { writable } from 'svelte/store';
+	import Modal, { bind } from 'svelte-simple-modal';
+	import Popup from './Popup.svelte';
+	const modal = writable(null);
+	
 
 	let inWav, outWav, holdWav, forestWav;
 
@@ -89,6 +94,12 @@
 		holdWav.pause();
 	}
 
+	function formatTime(secs) {
+		let mins = Math.floor(secs / 60);
+		let remainder = secs % 60;
+		return `${mins}:${remainder.toString().padStart(2, '0')}`;
+	}
+
 	function reset() {
 		play = false;
 		stopAudio();
@@ -160,6 +171,9 @@
 						if (cycle === exercise.cycles) {
 							cycle = exercise.cycles;
 							reset();
+							let cycleDuration = exercise.routine.reduce((sum, curr) => sum + curr.duration, 0);
+							let secs = cycleDuration * exercise.cycles;
+							modal.set(bind(Popup, { time: formatTime(secs), cycles: exercise.cycles, exercise_name: exercise.name }))
 							return;
 						}
 					} else {
@@ -257,6 +271,9 @@
 		</div>
 		<div class="total">{exercise.cycles}</div>
 	</div>
+	<div class="sub-top">
+		<h1>{exercise.name}</h1>
+	</div>
 	<div class="middle">
 		<div class="visualizer">
 			<div class={exercise.animation === 'box' ? 'box' : 'loop'}>
@@ -297,6 +314,12 @@
 			<IconGear style="font-size: 1.5rem;" />
 		</button> -->
 	</div>
+
+	<Modal
+		show={$modal}
+		styleBg={{ backgroundColor: 'rgba(255, 255, 255, 0.85)' }}
+		styleWindow={{ boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.15)' }}		
+	></Modal>
 </main>
 
 <style lang="scss">
