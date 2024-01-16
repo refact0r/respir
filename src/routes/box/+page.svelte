@@ -4,7 +4,7 @@
 	let exercise = {
 		name: 'Box Breathing',
 		description: '',
-		cycles: 3,
+		cycles: 10,
 		animation: 'box',
 		routine: [
 			{
