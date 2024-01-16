@@ -4,7 +4,7 @@
 </svelte:head>
 
 <main>
-	<h1>settings</h1>
+	<h1>create</h1>
 </main>
 
 <style lang="scss">
