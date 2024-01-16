@@ -4,36 +4,28 @@
 	import IconHouse from '~icons/ph/house-duotone';
 	// import IconGear from '~icons/ph/gear-duotone';
 	import IconReset from '~icons/ph/arrow-clockwise-duotone';
+	import { onMount } from 'svelte';
 
 	let inWav, outWav, holdWav, forestWav;
 
-	let exercise = {
-		name: 'Box Breathing',
-		description: '',
-		cycles: 3,
-		routine: [
-			{
-				name: 'breathe in',
-				duration: 4,
-				type: 'in'
-			},
-			{
-				name: 'hold',
-				duration: 4,
-				type: 'hold'
-			},
-			{
-				name: 'breathe out',
-				duration: 4,
-				type: 'out'
-			},
-			{
-				name: 'hold',
-				duration: 4,
-				type: 'hold'
-			}
-		]
-	};
+	export let exercise;
+
+	onMount(() => {
+		inWav = new Audio('/audio/breathe-in.wav');
+		outWav = new Audio('/audio/breathe-out.wav');
+		holdWav = new Audio('/audio/hold.wav');
+		forestWav = new Audio('/audio/forest.mp3');
+	});
+
+	if (exercise.animation === 'circle') {
+		let total = exercise.routine.reduce((sum, i) => sum + i.duration, 0);
+		let curr = 0;
+		for (let i = 0; i < exercise.routine.length; i++) {
+			exercise.routine[i].start = (curr / total) * 360;
+			curr += exercise.routine[i].duration;
+			exercise.routine[i].end = (curr / total) * 360;
+		}
+	}
 
 	let play = false;
 	let cycle = -2;
@@ -121,7 +113,11 @@
 
 		// animate stuff
 		if (cycle >= 0) {
-			animateBox(time);
+			if (exercise.animation === 'box') {
+				animateBox(time);
+			} else {
+				animateCircle(time);
+			}
 		}
 		animateText(elapsedSec);
 
@@ -178,19 +174,31 @@
 		const distance = boxSize - trackSize;
 		const increasing = (elapsedStep / 1000 / stepDuration) * distance + offset;
 		const decreasing = distance - (elapsedStep / 1000 / stepDuration) * distance + offset;
-		if (step === 0) {
-			circleElem.style.left = `${offset}rem`;
-			circleElem.style.bottom = `${increasing}rem`;
-		} else if (step === 1) {
-			circleElem.style.left = `${increasing}rem`;
-			circleElem.style.bottom = `${distance + offset}rem`;
-		} else if (step === 2) {
-			circleElem.style.left = `${distance + offset}rem`;
-			circleElem.style.bottom = `${decreasing}rem`;
-		} else if (step === 3) {
-			circleElem.style.left = `${decreasing}rem`;
-			circleElem.style.bottom = `${offset}rem`;
+		switch (step) {
+			case 0:
+				circleElem.style.left = `${offset}rem`;
+				circleElem.style.bottom = `${increasing}rem`;
+				break;
+			case 1:
+				circleElem.style.left = `${increasing}rem`;
+				circleElem.style.bottom = `${distance + offset}rem`;
+				break;
+			case 2:
+				circleElem.style.left = `${distance + offset}rem`;
+				circleElem.style.bottom = `${decreasing}rem`;
+				break;
+			case 3:
+				circleElem.style.left = `${decreasing}rem`;
+				circleElem.style.bottom = `${offset}rem`;
+				break;
 		}
+	}
+
+	// animate circle around circle
+	function animateCircle(time) {
+		const elapsedStep = time - prevStep;
+		const range = exercise.routine[step].end - exercise.routine[step].start;
+		circleElem.style.transform = `rotate(${(elapsedStep / 1000 / exercise.routine[step].duration) * range + exercise.routine[step].start}deg)`;
 	}
 
 	// animate text fades
@@ -233,9 +241,14 @@
 	</div>
 	<div class="middle">
 		<div class="visualizer">
-			<div class="box">
+			<div class={exercise.animation === 'box' ? 'box' : 'loop'}>
 				<div class="count" bind:this={countElem}>{cycle >= -1 ? count : ''}</div>
 				<div class="circle" bind:this={circleElem}></div>
+				{#if exercise.animation === 'circle'}
+					{#each exercise.routine as step}
+						<div class="tick" style={`transform: rotate(${step.start}deg); `}></div>
+					{/each}
+				{/if}
 			</div>
 		</div>
 		<div class="text" bind:this={textElem}>
@@ -268,23 +281,6 @@
 	</div>
 </main>
 
-<audio bind:this={inWav}>
-	<source src="/audio/breathe-in.wav" type="audio/wav" />
-	Your browser does not support the audio element.
-</audio>
-<audio bind:this={outWav}>
-	<source src="/audio/breathe-out.wav" type="audio/wav" />
-	Your browser does not support the audio element.
-</audio>
-<audio bind:this={holdWav}>
-	<source src="/audio/hold.wav" type="audio/wav" />
-	Your browser does not support the audio element.
-</audio>
-<audio bind:this={forestWav}>
-	<source src="/audio/forest.mp3" type="audio/mp3" />
-	Your browser does not support the audio element.
-</audio>
-
 <style lang="scss">
 	main {
 		flex: 1;
@@ -316,11 +312,13 @@
 	}
 
 	.cycle {
+		font-size: 1.2rem;
 		width: 3rem;
 		text-align: right;
 	}
 
 	.total {
+		font-size: 1.2rem;
 		width: 3rem;
 		text-align: left;
 	}
@@ -357,14 +355,14 @@
 		padding: 1.6rem;
 	}
 
-	$box-size: 20rem;
+	$size: 20rem;
 	$track-size: 1rem;
 	$circle-size: 2.5rem;
 	$offset: calc(-1rem * ($circle-size - $track-size) / 2rem - 1rem);
 
 	.box {
-		width: $box-size;
-		height: $box-size;
+		width: $size;
+		height: $size;
 		border: $track-size solid var(--bg-2);
 		border-radius: 2rem;
 		position: relative;
@@ -375,16 +373,62 @@
 
 	.count {
 		font-size: 3rem;
+		font-weight: 500;
 	}
 
 	.circle {
 		position: absolute;
-		left: $offset;
-		bottom: $offset;
 		width: $circle-size;
 		height: $circle-size;
 		border-radius: 50%;
 		border: 2.5px solid var(--txt);
 		background: var(--bg-3);
+	}
+
+	.box .circle {
+		left: $offset;
+		bottom: $offset;
+	}
+
+	.loop .circle {
+		left: calc($size / 2 - $circle-size / 2 - $track-size);
+		bottom: $offset;
+		transform-origin: calc($circle-size / 2) calc(-1 * ($size - $circle-size - $track-size) / 2);
+		transform: rotate(0deg);
+		// animation: 3s spin infinite linear;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	.loop {
+		width: $size;
+		height: $size;
+		border-radius: 50%;
+		border: $track-size solid var(--bg-2);
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	$tick-width: 3px;
+	$tick-height: 1.5rem;
+
+	.tick {
+		position: absolute;
+		left: calc($size / 2 - $track-size - 1.5px);
+		bottom: -1.25rem;
+		width: $tick-width;
+		height: $tick-height;
+		border-radius: $tick-width;
+		background: var(--txt);
+		transform-origin: calc($tick-width / 2) calc(-1 * ($size - $tick-height - $track-size) / 2);
 	}
 </style>
