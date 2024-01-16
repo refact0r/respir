@@ -167,8 +167,10 @@
 					if (step === exercise.routine.length - 1) {
 						step = 0;
 						cycle++;
+						
+						
 						// all cycles complete
-						if (cycle === exercise.cycles) {
+						if (cycle == exercise.cycles) {
 							cycle = exercise.cycles;
 							reset();
 							let cycleDuration = exercise.routine.reduce((sum, curr) => sum + curr.duration, 0);
