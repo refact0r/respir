@@ -154,6 +154,7 @@
 
 		button {
 			padding: 0.6rem;
+			backdrop-filter: none;
 		}
 
 		&.create {
