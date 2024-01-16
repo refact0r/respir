@@ -1,3 +1,7 @@
+<script>
+	import IconHouse from '~icons/ph/house-duotone';
+</script>
+
 <svelte:head>
 	<title>respir: about</title>
 	<meta name="description" content="" />
@@ -13,6 +17,10 @@
 		this web app was created by shibest, refact0r, and ben-6 for the 2024 Interlake Programming Club
 		Winter Hackathon.
 	</p>
+	<br />
+	<a class="icon-button" href="/">
+		<IconHouse style="font-size: 1.3rem;" />
+	</a>
 </main>
 
 <style lang="scss">
