@@ -229,7 +229,7 @@
 			if (count === 1) {
 				textElem.style.opacity = progress;
 				if (step === exercise.routine.length - 1 && cycle < exercise.cycles) {
-					barElem.style.width = `${Math.min((cycle / exercise.cycles) * 100 + (((elapsedSec - 800) / 200) * 100) / exercise.cycles, ((cycle+1) / exercise.cycles) * 100)}%`;
+					barElem.style.width = `${Math.min((cycle / exercise.cycles) * 100 + (((elapsedSec - 800) / 200) * 100) / exercise.cycles, ((cycle + 1) / exercise.cycles) * 100)}%`;
 				}
 			}
 		} else if (elapsedSec <= 200) {
@@ -307,6 +307,15 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		animation: fadeIn ease 2s;
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 
 	.top {
