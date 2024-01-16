@@ -4,9 +4,7 @@
 
 <div class="app">
 	<div class="main">
-		<main>
-			<slot />
-		</main>
+		<slot />
 	</div>
 	<section class="sticky">
 		<div class="bubbles">
@@ -30,12 +28,6 @@
 		display: flex;
 		flex-direction: column;
 		z-index: 1;
-	}
-
-	main {
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
 	}
 
 	.sticky {
