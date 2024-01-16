@@ -30,7 +30,7 @@
 </script>
 
 <svelte:head>
-	<title>home - respir</title>
+	<title>respir</title>
 	<meta name="description" content="" />
 </svelte:head>
 

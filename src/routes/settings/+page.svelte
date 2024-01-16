@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title></title>
+	<title>respir: settings</title>
 	<meta name="description" content="" />
 </svelte:head>
 
