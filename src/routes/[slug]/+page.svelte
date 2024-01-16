@@ -81,6 +81,7 @@
 		play = false;
 		stopAudio();
 		cycle = -2;
+		step = 0;
 		count = 0;
 		text = 'click play to start';
 		if (exercise.animation === 'box') {
@@ -145,8 +146,8 @@
 						cycle++;
 						// all cycles complete
 						if (cycle === exercise.cycles) {
-							reset();
 							cycle = exercise.cycles;
+							reset();
 							return;
 						}
 					} else {
@@ -214,7 +215,7 @@
 			if (count === 1) {
 				textElem.style.opacity = progress;
 				if (step === exercise.routine.length - 1 && cycle < exercise.cycles) {
-					barElem.style.width = `${(cycle / exercise.cycles) * 100 + (((elapsedSec - 800) / 200) * 100) / exercise.cycles}%`;
+					barElem.style.width = `${Math.min((cycle / exercise.cycles) * 100 + (((elapsedSec - 800) / 200) * 100) / exercise.cycles, ((cycle+1) / exercise.cycles) * 100)}%`;
 				}
 			}
 		} else if (elapsedSec <= 200) {
