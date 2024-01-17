@@ -29,22 +29,27 @@
 	let eID;
 	let eIDcycles;
 
-	function toggleCycles(id) {
+	async function toggleCycles(id) {
 		if (cyclesPrompt.style.opacity == 1) {
 			cyclesPrompt.style.opacity = 0;
+			await wait();
+			cyclesPrompt.style.zIndex = -100;
 		} else {
 			cyclesPrompt.style.opacity = 1;
+			cyclesPrompt.style.zIndex = 9;
 			cyclesPrompt.id = id;
 		}
 		eID = id;
 		eIDcycles = exercises[eID].cycles;
 	}
 
-	function closeCycles() {
+	async function closeCycles() {
 		cyclesPrompt.style.opacity = 0;
+		await wait();
+		cyclesPrompt.style.zIndex = -100;
 	}
 
-	function setCycles() {
+	async function setCycles() {
 		let cyclesCount = cycles.value;
 
 		if (cyclesCount) {
@@ -53,6 +58,15 @@
 			exercises[eID].cycles = 10;
 		}
 		cyclesPrompt.style.opacity = 0;
+		await wait();
+		cyclesPrompt.style.zIndex = -100;
+	}
+	function wait() {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve('resolved');
+			}, 200);
+		});
 	}
 
 	function totalTime(exercise) {
@@ -272,14 +286,14 @@
 
 	.form-popup {
 		opacity: 0;
-		transition: all 0.2s ease-out;
+		transition: opacity 0.2s ease-out;
 		//display: none;
 		position: fixed;
 		align-items: center;
 		top: 25%;
 		margin: auto;
 		//border: 3px solid #f1f1f1;
-		z-index: 9;
+		z-index: -100;
 	}
 
 	.form-container {
