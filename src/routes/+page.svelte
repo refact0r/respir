@@ -1,4 +1,5 @@
 <script>
+	import { fade } from 'svelte/transition';
 	import IconAir from '~icons/ph/wind-duotone';
 	import IconGear from '~icons/ph/gear-duotone';
 	import IconInfo from '~icons/ph/info-duotone';
@@ -23,15 +24,35 @@
 	];
 	let largest = Math.max(...fakeActivity.map((x) => x.value));
 
-	function setCycles(id) {
-		let cycles = prompt(
-			'Please enter the desired number of cycles for this breathing exercise. The default is 10 cycles.',
-			exercises[id].cycles
-		);
+	let cyclesPrompt;
+	let cycles;
+	let eID;
+	let eIDcycles;
 
-		if (cycles) {
-			exercises[id].cycles = cycles;
+	function toggleCycles(id) {
+		if (cyclesPrompt.style.opacity == 1) {
+			cyclesPrompt.style.opacity = 0;
+		} else {
+			cyclesPrompt.style.opacity = 1;
+			cyclesPrompt.id = id;
 		}
+		eID = id;
+		eIDcycles = exercises[eID].cycles;
+	}
+
+	function closeCycles() {
+		cyclesPrompt.style.opacity = 0;
+	}
+
+	function setCycles() {
+		let cyclesCount = cycles.value;
+
+		if (cyclesCount) {
+			exercises[eID].cycles = cyclesCount;
+		} else {
+			exercises[eID].cycles = 10;
+		}
+		cyclesPrompt.style.opacity = 0;
 	}
 
 	function totalTime(exercise) {
@@ -59,6 +80,18 @@
 </svelte:head>
 
 <main>
+	<div class="form-popup" bind:this={cyclesPrompt}>
+		<form class="form-container">
+			<label for="cycles">enter number of cycles for {eID} breathing:</label>
+			<br />
+			<input type="number" min="1" step="1" value={eIDcycles} bind:this={cycles} />
+
+			<button type="submit" class="btn" on:click|preventDefault={() => setCycles()}>submit</button>
+			<button type="button" class="btn cancel" on:click|preventDefault={() => closeCycles()}
+				>close</button
+			>
+		</form>
+	</div>
 	<section>
 		<div class="head">
 			<div class="text">
@@ -98,7 +131,7 @@
 					<button
 						class="icon-button"
 						title="edit number of cycles"
-						on:click|preventDefault={() => setCycles(id)}
+						on:click|preventDefault={() => toggleCycles(id)}
 					>
 						<IconSlider style="font-size: 1rem;" />
 					</button>
@@ -235,5 +268,55 @@
 		background-color: var(--bg-3);
 		margin: 0 0.1rem;
 		border-radius: 0.5rem;
+	}
+
+	.form-popup {
+		opacity: 0;
+		transition: all 0.2s ease-out;
+		//display: none;
+		position: fixed;
+		align-items: center;
+		top: 25%;
+		margin: auto;
+		//border: 3px solid #f1f1f1;
+		z-index: 9;
+	}
+
+	.form-container {
+		max-width: 400px;
+		padding: 2rem;
+		background-color: hsla(168, 100%, 92%, 0.8);
+		border-radius: 2rem;
+	}
+
+	.form-container input[type='number'] {
+		width: 100%;
+		padding: 15px;
+		margin: 5px 0 22px 0;
+		border: none;
+		background-color: hsla(164, 35%, 68%, 0.8);
+		border-radius: 2rem;
+	}
+
+	.form-container input[type='number']:focus {
+		background-color: hsla(164, 55%, 82%, 0.8);
+		outline: none;
+	}
+
+	.form-container .btn {
+		background-color: hsla(164, 25%, 61%, 0.8);
+		color: white;
+		padding: 16px 20px;
+		border: none;
+		cursor: pointer;
+		width: 100%;
+		margin-bottom: 10px;
+		border-radius: 2rem;
+		transition: 0.2s;
+	}
+
+	.form-container .btn:hover,
+	.open-button:hover {
+		background-color: hsla(165, 14%, 51%, 0.8);
 	}
 </style>
