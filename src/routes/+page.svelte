@@ -275,7 +275,8 @@
 		position: fixed;
 		z-index: 9;
 		backdrop-filter: blur(6px);
-		margin-top: -12.5%;
+		top: 0;
+		left: 0;
 	}
 
 	.form-container {
