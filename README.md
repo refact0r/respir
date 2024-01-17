@@ -1,38 +1,11 @@
-# create-svelte
+<img width="400" src="https://github.com/refact0r/respir/assets/34758569/32e80d6e-fece-4432-97a0-4ff6e7eceb17" />
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+# respir
 
-## Creating a project
+breathing exercises to help you relax, focus, or sleep.
 
-If you're seeing this, you've probably already done this step. Congrats!
+created for the 2024 IPC Winter Hackathon.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+<img width="800" src="https://github.com/refact0r/respir/assets/34758569/caefb46e-9826-4449-8afa-97b57a3c2abc" />
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+<img width="800" src="https://github.com/refact0r/respir/assets/34758569/11bebbc9-1566-42e2-bd1b-56d5efbe6ccb" />
