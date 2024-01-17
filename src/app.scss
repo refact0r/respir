@@ -16,12 +16,7 @@ h1 {
 }
 
 body {
-	font-family: 'Quicksand', sans-serif;
-	font-family: 'Outfit', sans-serif;
 	font-family: 'Satoshi', sans-serif;
-	// font-family: 'Epilogue', sans-serif;
-	// font-family: 'Chillax', sans-serif;
-	// font-weight: 300;
 	color: var(--txt);
 	background-color: var(--bg-1);
 	margin: 0;
@@ -61,16 +56,4 @@ button {
 		transform: rotate(360deg);
 		background-color: var(--bg-3);
 	}
-}
-
-.modal-bg {
-	background: none;
-}
-
-.modal-window {
-	background: var(--bg-2);
-	backdrop-filter: blur(3px);
-	border-radius: 1rem;
-	padding: 2rem;
-	font-size: 1.2rem;
 }

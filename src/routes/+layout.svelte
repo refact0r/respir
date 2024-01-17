@@ -1,7 +1,6 @@
 <script>
 	import '../app.scss';
 	import { fade } from 'svelte/transition';
-	import { page } from '$app/stores';
 
 	export let data;
 </script>
