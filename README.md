@@ -1,5 +1,3 @@
-<img width="400" src="https://github.com/refact0r/respir/assets/34758569/32e80d6e-fece-4432-97a0-4ff6e7eceb17" />
-
 # respir
 
 breathing exercises to help you relax, focus, or sleep.
