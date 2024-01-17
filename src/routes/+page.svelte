@@ -1,6 +1,7 @@
 <script>
 	import { fade } from 'svelte/transition';
 	import IconAir from '~icons/ph/wind-duotone';
+	import IconUser from '~icons/ph/user-circle-duotone';
 	import IconGear from '~icons/ph/gear-duotone';
 	import IconInfo from '~icons/ph/info-duotone';
 	import IconSlider from '~icons/ph/sliders-horizontal-duotone';
@@ -101,6 +102,9 @@
 				</a>
 				<a href="about" class="icon-button" title="about">
 					<IconInfo style="font-size: 1.3rem;" />
+				</a>
+				<a href="login" class="icon-button" title="account">
+					<IconUser style="font-size: 1.3rem;" />
 				</a>
 			</div>
 		</div>
