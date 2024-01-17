@@ -74,8 +74,8 @@
 
 <main>
 	{#if showCycles}
-		<div class="form-popup" transition:fade={{ duration: 200 }}>
-			<form class="form-container" transition:fade={{ duration: 200 }}>
+		<div class="form-popup" transition:fade={{ duration: 100 }}>
+			<form class="form-container" transition:fade={{ duration: 100 }}>
 				<label for="cycles">number of cycles</label>
 				<br />
 				<input type="number" min="1" step="1" bind:value={currentCycles} />
