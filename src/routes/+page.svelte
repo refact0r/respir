@@ -24,35 +24,28 @@
 	];
 	let largest = Math.max(...fakeActivity.map((x) => x.value));
 
-	let cyclesPrompt;
-	let cycles;
-	let eID;
-	let eIDcycles;
+	let showCycles = false;
+	let currentId;
+	let currentCycles;
 
-	function toggleCycles(id) {
-		if (cyclesPrompt.style.opacity == 1) {
-			cyclesPrompt.style.opacity = 0;
-		} else {
-			cyclesPrompt.style.opacity = 1;
-			cyclesPrompt.id = id;
-		}
-		eID = id;
-		eIDcycles = exercises[eID].cycles;
+	function openCycles(id) {
+		showCycles = true;
+		currentId = id;
+		currentCycles = exercises[id].cycles;
 	}
 
 	function closeCycles() {
-		cyclesPrompt.style.opacity = 0;
+		showCycles = false;
 	}
 
 	function setCycles() {
-		let cyclesCount = cycles.value;
-
-		if (cyclesCount) {
-			exercises[eID].cycles = cyclesCount;
+		if (currentCycles > 0) {
+			exercises[currentId].cycles = currentCycles;
 		} else {
-			exercises[eID].cycles = 10;
+			exercises[currentId].cycles = 10;
 		}
-		cyclesPrompt.style.opacity = 0;
+
+		showCycles = false;
 	}
 
 	function totalTime(exercise) {
@@ -80,18 +73,21 @@
 </svelte:head>
 
 <main>
-	<div class="form-popup" bind:this={cyclesPrompt}>
-		<form class="form-container">
-			<label for="cycles">enter number of cycles for {eID} breathing:</label>
-			<br />
-			<input type="number" min="1" step="1" value={eIDcycles} bind:this={cycles} />
+	{#if showCycles}
+		<div class="form-popup">
+			<form class="form-container">
+				<label for="cycles">number of cycles</label>
+				<br />
+				<input type="number" min="1" step="1" bind:value={currentCycles} />
 
-			<button type="submit" class="btn" on:click|preventDefault={() => setCycles()}>submit</button>
-			<button type="button" class="btn cancel" on:click|preventDefault={() => closeCycles()}
-				>close</button
-			>
-		</form>
-	</div>
+				<button type="submit" class="btn" on:click|preventDefault={() => setCycles()}>submit</button
+				>
+				<button type="button" class="btn cancel" on:click|preventDefault={() => closeCycles()}>
+					close
+				</button>
+			</form>
+		</div>
+	{/if}
 	<section>
 		<div class="head">
 			<div class="text">
@@ -131,7 +127,7 @@
 					<button
 						class="icon-button"
 						title="edit number of cycles"
-						on:click|preventDefault={() => toggleCycles(id)}
+						on:click|preventDefault={() => openCycles(id)}
 					>
 						<IconSlider style="font-size: 1rem;" />
 					</button>
@@ -271,52 +267,48 @@
 	}
 
 	.form-popup {
-		opacity: 0;
-		transition: all 0.2s ease-out;
-		//display: none;
-		position: fixed;
+		display: flex;
 		align-items: center;
-		top: 25%;
-		margin: auto;
-		//border: 3px solid #f1f1f1;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		position: fixed;
 		z-index: 9;
+		backdrop-filter: blur(6px);
 	}
 
 	.form-container {
-		max-width: 400px;
+		max-width: 30rem;
+		width: 100%;
 		padding: 2rem;
-		background-color: hsla(168, 100%, 92%, 0.8);
+		background-color: var(--bg-2);
 		border-radius: 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.form-container label {
+		font-size: 1.2rem;
 	}
 
 	.form-container input[type='number'] {
 		width: 100%;
-		padding: 15px;
-		margin: 5px 0 22px 0;
 		border: none;
-		background-color: hsla(164, 35%, 68%, 0.8);
+		padding: 1rem;
 		border-radius: 2rem;
+		font: inherit;
+		color: inherit;
+		background-color: var(--bg-3);
 	}
 
 	.form-container input[type='number']:focus {
-		background-color: hsla(164, 55%, 82%, 0.8);
 		outline: none;
 	}
 
-	.form-container .btn {
-		background-color: hsla(164, 25%, 61%, 0.8);
-		color: white;
-		padding: 16px 20px;
-		border: none;
-		cursor: pointer;
-		width: 100%;
-		margin-bottom: 10px;
+	.form-container button {
+		padding: 1rem;
 		border-radius: 2rem;
-		transition: 0.2s;
-	}
-
-	.form-container .btn:hover,
-	.open-button:hover {
-		background-color: hsla(165, 14%, 51%, 0.8);
+		background-color: var(--bg-3);
 	}
 </style>
