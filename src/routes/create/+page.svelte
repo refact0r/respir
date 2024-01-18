@@ -148,7 +148,7 @@
 						name="name"
 						title="input name for custom breathing exercise"
 						minlength="1"
-						maxlength="10"
+						maxlength="20"
 						required
 						bind:value={custom_name}
 					/>
