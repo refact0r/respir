@@ -15,6 +15,7 @@
 	export let data;
 
 	let exercise = data.exercise;
+	console.log(exercise);
 
 	onMount(() => {
 		inWav = new Audio('/audio/breathe-in.wav');
