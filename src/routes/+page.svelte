@@ -7,6 +7,7 @@
 	import IconSlider from '~icons/ph/sliders-horizontal-duotone';
 	import IconPlus from '~icons/ph/plus';
 	import { exercises } from '$lib/exercises.js';
+	import { presets } from '$lib/custom-presets.js';
 
 	let bestTime = 60;
 
@@ -26,13 +27,19 @@
 	let largest = Math.max(...fakeActivity.map((x) => x.value));
 
 	let showCycles = false;
+	let isCustom = false;
 	let currentId;
 	let currentCycles;
 
-	function openCycles(id) {
+	function openCycles(id, custom) {
 		showCycles = true;
 		currentId = id;
-		currentCycles = exercises[id].cycles;
+		isCustom = custom;
+		if (isCustom) {
+			currentCycles = presets[id].cycles;
+		} else {
+			currentCycles = exercises[id].cycles;
+		}
 	}
 
 	function closeCycles() {
@@ -40,10 +47,18 @@
 	}
 
 	function setCycles() {
-		if (currentCycles > 0) {
-			exercises[currentId].cycles = currentCycles;
+		if (currentCycles > 0 && currentCycles % 1 == 0) {
+			if (isCustom) {
+				presets[currentId].cycles = currentCycles;
+			} else {
+				exercises[currentId].cycles = currentCycles;
+			}
 		} else {
-			exercises[currentId].cycles = 10;
+			if (isCustom) {
+				presets[currentId].cycles = 10;
+			} else {
+				exercises[currentId].cycles = 10;
+			}
 		}
 
 		showCycles = false;
@@ -78,11 +93,11 @@
 		<div class="form-popup" transition:fade={{ duration: 100 }}>
 			<form class="form-container" transition:fade={{ duration: 100 }}>
 				<label for="cycles">number of cycles</label>
-				<br />
 				<input type="number" min="1" step="1" bind:value={currentCycles} />
 
-				<button type="submit" class="btn" on:click|preventDefault={() => setCycles()}>submit</button
-				>
+				<button type="submit" class="btn" on:click|preventDefault={() => setCycles()}>
+					submit
+				</button>
 				<button type="button" class="btn cancel" on:click|preventDefault={() => closeCycles()}>
 					close
 				</button>
@@ -131,7 +146,7 @@
 					<button
 						class="icon-button"
 						title="edit number of cycles"
-						on:click|preventDefault={() => openCycles(id)}
+						on:click|preventDefault={() => openCycles(id, false)}
 					>
 						<IconSlider style="font-size: 1rem;" />
 					</button>
@@ -147,7 +162,25 @@
 		</div>
 
 		<h2>custom exercises</h2>
-		<a href="/create" class="exercise create" title="create new custom exercise">
+		<div class="exercises b">
+			{#each Object.keys(presets) as id}
+				<a href="/{id}" class="exercise" title="{id} breathing">
+					<div class="left">
+						<h3>{presets[id].name}</h3>
+						<p>{presets[id].cycles} cycles - {totalTime(presets[id])}</p>
+						<p>{presets[id].description}</p>
+					</div>
+					<button
+						class="icon-button"
+						title="edit number of cycles"
+						on:click|preventDefault={() => openCycles(id, true)}
+					>
+						<IconSlider style="font-size: 1rem;" />
+					</button>
+				</a>
+			{/each}
+		</div>
+		<a href="/create" class="exercise create" id="create" title="create new custom exercise">
 			<IconPlus /><span>create custom exercise</span>
 		</a>
 	</section>
@@ -196,6 +229,10 @@
 		display: grid;
 		grid-template-columns: 30rem 30rem;
 		gap: 1rem;
+
+		&.b {
+			margin-bottom: 1rem;
+		}
 	}
 
 	.exercise {
@@ -310,11 +347,16 @@
 
 	.form-container input[type='number']:focus {
 		outline: none;
+		background-color: var(--bg-2);
 	}
 
 	.form-container button {
 		padding: 1rem;
 		border-radius: 2rem;
 		background-color: var(--bg-3);
+		transition: 0.2s;
+		&:hover {
+			background-color: var(--bg-4);
+		}
 	}
 </style>
