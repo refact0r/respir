@@ -1,6 +1,7 @@
 <script>
 	import '../app.scss';
 	import { fade } from 'svelte/transition';
+	//import { ambienceVolume, speechVolume } from '../../lib/stores/volumeData.js';
 
 	export let data;
 </script>
