@@ -225,22 +225,28 @@
 		delete presets[id];
 		const element = document.getElementById(id);
 		var id = setInterval(frame, 10);
-		var scale = 100;
+		var degree = 0;
 		var opacity = 1;
 		function frame() {
-			if (scale == 0) {
+			if (degree == 180) {
 				clearInterval(id);
 				element.remove();
 			} else {
-				scale--;
-				opacity -= 0.01;
-				element.style.scale = scale + '%';
+				degree += 2;
+				opacity -= 0.012;
+				element.style.scale = 50 * Math.cos((degree * Math.PI) / 180) + 50 + '%';
 				element.style.opacity = opacity;
 			}
 		}
 
 		//refresh();
 		//location.reload();
+	}
+
+	function copyCustom() {
+		//let text = presets[customId].name.slice(0, presets[id].name.length - 10)+";"+;
+		navigator.clipboard.writeText(presets[customId]);
+		console.log('copied to clipboard');
 	}
 
 	function totalTime(exercise) {
@@ -398,18 +404,14 @@
 							submit
 						</button>
 					</div>
-					<!--<div class="columb">
-						<button
-							type="button"
-							class="btn c"
-							on:click|preventDefault={() => deleteCustom()}
-						>
-							delete
-						</button>
-					</div>-->
 					<div class="columb">
-						<button type="button" class="btn cancel" on:click|preventDefault={() => closeCustom()}>
+						<button type="button" class="btn c" on:click|preventDefault={() => closeCustom()}>
 							close
+						</button>
+					</div>
+					<div class="columb">
+						<button type="button" class="btn" on:click|preventDefault={() => copyCustom()}>
+							copy
 						</button>
 					</div>
 				</div>
