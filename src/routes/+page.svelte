@@ -298,7 +298,7 @@
 		text += filteredName + ';' + filteredDesc + ';' + presets[customId].cycles + ';' + order;
 
 		navigator.clipboard.writeText(text);
-		showCustomDetails = false;
+		//showCustomDetails = false;
 	}
 
 	function totalTime(exercise) {
