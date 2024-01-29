@@ -2,6 +2,10 @@
 	import IconHouse from '~icons/ph/house-duotone';
 	import { goto } from '$app/navigation';
 	import { presets } from '$lib/custom-presets.js';
+	import { fade } from 'svelte/transition';
+
+	let showImport = false;
+	let importValue;
 
 	let custom_name;
 	let custom_desc;
@@ -128,6 +132,86 @@
 	function returnHome() {
 		goto('/');
 	}
+
+	function openImport() {
+		showImport = true;
+	}
+
+	function importObj() {
+		let input = importValue;
+		const list = [];
+		while (input.indexOf(';') != -1) {
+			let index = input.indexOf(';');
+			let string = input.slice(0, index);
+			list.push(string);
+			input = input.slice(index + 1);
+		}
+		if (list.length >= 6) {
+			// set name
+			let cname = list[0];
+			let name = '';
+			let name_chars = [];
+			while (cname.indexOf('.') != -1) {
+				let index = cname.indexOf('.');
+				let string = cname.slice(0, index);
+				name_chars.push(string);
+				cname = cname.slice(index + 1);
+			}
+			for (let i = 0; i < name_chars.length; i++) {
+				name += String.fromCharCode(name_chars[i]);
+			}
+			custom_name = name;
+
+			// set description
+			let cdesc = list[1];
+			let desc = '';
+			let desc_chars = [];
+			while (cdesc.indexOf('.') != -1) {
+				let index = cdesc.indexOf('.');
+				let string = cdesc.slice(0, index);
+				desc_chars.push(string);
+				cdesc = cdesc.slice(index + 1);
+			}
+			for (let i = 0; i < desc_chars.length; i++) {
+				desc += String.fromCharCode(desc_chars[i]);
+			}
+			custom_desc = desc;
+
+			//set cycles
+			if (parseInt(list[2])) {
+				custom_cycles = list[2];
+			}
+
+			//set durations for parts of exercise
+			if (list[3] === 'ihoh') {
+				custom_in_duration = parseInt(list[4]) ? parseInt(list[4]) : null;
+				custom_hold_init_duration = parseInt(list[5]) ? parseInt(list[5]) : null;
+				custom_out_duration = parseInt(list[6]) ? parseInt(list[6]) : null;
+				custom_hold_after_duration = parseInt(list[7]) ? parseInt(list[7]) : null;
+			} else if (list[3] === 'iho') {
+				custom_in_duration = parseInt(list[4]) ? parseInt(list[4]) : null;
+				custom_hold_init_duration = parseInt(list[5]) ? parseInt(list[5]) : null;
+				custom_out_duration = parseInt(list[6]) ? parseInt(list[6]) : null;
+				custom_hold_after_duration = 0;
+			} else if (list[3] === 'ioh') {
+				custom_in_duration = parseInt(list[4]) ? parseInt(list[4]) : null;
+				custom_hold_init_duration = 0;
+				custom_out_duration = parseInt(list[5]) ? parseInt(list[5]) : null;
+				custom_hold_after_duration = parseInt(list[6]) ? parseInt(list[6]) : null;
+			} else {
+				custom_in_duration = parseInt(list[4]) ? parseInt(list[4]) : null;
+				custom_hold_init_duration = 0;
+				custom_out_duration = parseInt(list[5]) ? parseInt(list[5]) : null;
+				custom_hold_after_duration = 0;
+			}
+		}
+
+		showImport = false;
+	}
+
+	function closeImport() {
+		showImport = false;
+	}
 </script>
 
 <svelte:head>
@@ -136,6 +220,23 @@
 </svelte:head>
 
 <main>
+	{#if showImport}
+		<div
+			class="form-popup"
+			on:submit|preventDefault={() => importObj()}
+			transition:fade={{ duration: 100 }}
+		>
+			<form class="form-container" transition:fade={{ duration: 100 }}>
+				<label for="import">import custom exercise preset data:</label>
+				<input type="text" minlength="1" bind:value={importValue} required />
+
+				<button type="submit" class="btn"> import </button>
+				<button type="button" class="btn cancel" on:click|preventDefault={() => closeImport()}>
+					close
+				</button>
+			</form>
+		</div>
+	{/if}
 	<h1>create new breathing exercise</h1>
 	<div class="form">
 		<form on:submit|preventDefault={() => addCustomPreset()}>
@@ -246,11 +347,16 @@
 			</div>
 			<div class="row">
 				<div class="column g">
-					<button type="submit" class="btn l"> submit </button>
+					<button type="submit" class="btn l"> create </button>
 				</div>
 				<div class="column g b">
 					<button type="button" class="btn" on:click|preventDefault={() => returnHome()}>
 						cancel
+					</button>
+				</div>
+				<div class="column g b">
+					<button type="button" class="btn" on:click|preventDefault={() => openImport()}>
+						import
 					</button>
 				</div>
 			</div>
@@ -294,6 +400,7 @@
 		padding: 1rem;
 		border-radius: 2rem;
 		background-color: var(--bg-2);
+		width: 100%;
 		transition: 0.2s;
 		&.l {
 			float: right;
@@ -352,5 +459,63 @@
 	.form input[type='text']:focus {
 		outline: none;
 		background-color: var(--bg-2);
+	}
+
+	.form-popup {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		z-index: 9;
+		backdrop-filter: blur(6px);
+		top: 0;
+		left: 0;
+	}
+
+	.form-container {
+		max-width: 30rem;
+		width: 100%;
+		padding: 2rem;
+		background-color: var(--bg-2);
+		border-radius: 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.form-container label {
+		font-size: 1.2rem;
+	}
+
+	.form-container input[type='text'] {
+		width: 100%;
+		border: none;
+		padding: 0.5rem;
+		border-radius: 1rem;
+		font: inherit;
+		color: inherit;
+		background-color: var(--bg-3);
+	}
+
+	.form-container input[type='text']:focus {
+		outline: none;
+		background-color: var(--bg-2);
+	}
+
+	.form-container input[type='text']:disabled {
+		background-color: var(--bg-4);
+	}
+
+	.form-container button {
+		padding: 1rem;
+		border-radius: 2rem;
+		background-color: var(--bg-3);
+		width: 100%;
+		transition: 0.2s;
+		&:hover {
+			background-color: var(--bg-4);
+		}
 	}
 </style>
