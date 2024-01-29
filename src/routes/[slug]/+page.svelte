@@ -87,6 +87,12 @@
 		}
 	}
 
+	function onKeyDown(e) {
+		if (e.key === ' ') {
+			togglePlay();
+		}
+	}
+
 	function stopAudio() {
 		forestWav.pause();
 		inWav.pause();
@@ -322,6 +328,8 @@
 	<!-- <Modal show={$modal} unstyled={true} classBg="modal-bg" classWindow="modal-window"></Modal> -->
 </main>
 
+<svelte:window on:keydown|preventDefault={onKeyDown} />
+
 <style lang="scss">
 	main {
 		flex: 1;
@@ -475,3 +483,4 @@
 		z-index: -1;
 	}
 </style>
+
