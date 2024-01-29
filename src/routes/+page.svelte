@@ -238,15 +238,67 @@
 				element.style.opacity = opacity;
 			}
 		}
-
-		//refresh();
-		//location.reload();
 	}
 
 	function copyCustom() {
-		//let text = presets[customId].name.slice(0, presets[id].name.length - 10)+";"+;
-		navigator.clipboard.writeText(presets[customId]);
-		console.log('copied to clipboard');
+		let text = '';
+		let order = '';
+
+		let unfilteredName = presets[customId].name.slice(0, presets[customId].name.length - 10);
+		let filteredName = '';
+		for (let i = 0; i < unfilteredName.length; i++) {
+			filteredName += unfilteredName.charCodeAt(i) + '.';
+		}
+		let unfilteredDesc = presets[customId].description;
+		let filteredDesc = '';
+		for (let i = 0; i < unfilteredDesc.length; i++) {
+			filteredDesc += unfilteredDesc.charCodeAt(i) + '.';
+		}
+
+		if (presets[customId].routine.length > 3) {
+			order =
+				'ihoh;' +
+				presets[customId].routine[0].duration +
+				';' +
+				presets[customId].routine[1].duration +
+				';' +
+				presets[customId].routine[2].duration +
+				';' +
+				presets[customId].routine[3].duration +
+				';';
+		} else if (presets[customId].routine.length > 2) {
+			if (presets[customId].routine[1].type === 'hold') {
+				order =
+					'iho;' +
+					presets[customId].routine[0].duration +
+					';' +
+					presets[customId].routine[1].duration +
+					';' +
+					presets[customId].routine[2].duration +
+					';';
+			} else {
+				order =
+					'ioh;' +
+					presets[customId].routine[0].duration +
+					';' +
+					presets[customId].routine[1].duration +
+					';' +
+					presets[customId].routine[2].duration +
+					';';
+			}
+		} else {
+			order =
+				'io;' +
+				presets[customId].routine[0].duration +
+				';' +
+				presets[customId].routine[1].duration +
+				';';
+		}
+
+		text += filteredName + ';' + filteredDesc + ';' + presets[customId].cycles + ';' + order;
+
+		navigator.clipboard.writeText(text);
+		showCustomDetails = false;
 	}
 
 	function totalTime(exercise) {
@@ -281,7 +333,7 @@
 				<input type="number" min="1" step="1" bind:value={currentCycles} />
 
 				<button type="submit" class="btn" on:click|preventDefault={() => setCycles()}>
-					submit
+					update
 				</button>
 				<button type="button" class="btn cancel" on:click|preventDefault={() => closeCycles()}>
 					close
@@ -401,7 +453,7 @@
 				<div class="row">
 					<div class="columb">
 						<button type="submit" class="btn l" on:click|preventDefault={() => setCustom()}>
-							submit
+							update
 						</button>
 					</div>
 					<div class="columb">
@@ -504,7 +556,7 @@
 			{/each}
 		</div>
 		<a href="/create" class="exercise create" id="create" title="create new custom exercise">
-			<IconPlus /><span>create custom exercise</span>
+			<IconPlus /><span>create or import custom exercise</span>
 		</a>
 	</section>
 </main>
