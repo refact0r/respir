@@ -1,5 +1,9 @@
-export let exercises = {
-	equal: {
+import { persisted } from 'svelte-persisted-store';
+
+export const customs = persisted('customs', []);
+export const presets = persisted('presets', [
+	{
+		id: 'equal',
 		name: 'equal breathing',
 		description: 'helps you relax and focus',
 		cycles: 10,
@@ -17,7 +21,8 @@ export let exercises = {
 			}
 		]
 	},
-	'4-7-8': {
+	{
+		id: '4-7-8',
 		name: '4-7-8 breathing',
 		description: 'promotes relaxation and better sleep',
 		cycles: 10,
@@ -40,7 +45,8 @@ export let exercises = {
 			}
 		]
 	},
-	box: {
+	{
+		id: 'box',
 		name: 'box breathing',
 		description: 'relieves stress and improves mood',
 		cycles: 10,
@@ -68,4 +74,4 @@ export let exercises = {
 			}
 		]
 	}
-};
+]);

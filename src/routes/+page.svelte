@@ -5,59 +5,62 @@
 	import IconGear from '~icons/ph/gear-duotone';
 	import IconInfo from '~icons/ph/info-duotone';
 	import IconSlider from '~icons/ph/sliders-horizontal-duotone';
+	import IconCheck from '~icons/ph/check';
+	import IconX from '~icons/ph/x';
+	import IconTrash from '~icons/ph/trash-duotone';
 	import IconPlus from '~icons/ph/plus';
-	import { exercises } from '$lib/exercises.js';
-	import { presets } from '$lib/custom-presets.js';
+	import { presets } from '$lib/stores/exercises.js';
+	import { customs } from '$lib/stores/exercises.js';
 
 	let bestTime = 60;
 
-	let fakeActivity = [
-		{ value: 3, date: new Date('2024-01-01') },
-		{ value: 12, date: new Date('2024-01-02') },
-		{ value: 4, date: new Date('2024-01-03') },
-		{ value: 6, date: new Date('2024-01-04') },
-		{ value: 8, date: new Date('2024-01-05') },
-		{ value: 10, date: new Date('2024-01-06') },
-		{ value: 7, date: new Date('2024-01-07') },
-		{ value: 2, date: new Date('2024-01-08') },
-		{ value: 5, date: new Date('2024-01-09') },
-		{ value: 9, date: new Date('2024-01-10') },
-		{ value: 1, date: new Date('2024-01-11') }
-	];
-	let largest = Math.max(...fakeActivity.map((x) => x.value));
+	// let fakeActivity = [
+	// 	{ value: 3, date: new Date('2024-01-01') },
+	// 	{ value: 12, date: new Date('2024-01-02') },
+	// 	{ value: 4, date: new Date('2024-01-03') },
+	// 	{ value: 6, date: new Date('2024-01-04') },
+	// 	{ value: 8, date: new Date('2024-01-05') },
+	// 	{ value: 10, date: new Date('2024-01-06') },
+	// 	{ value: 7, date: new Date('2024-01-07') },
+	// 	{ value: 2, date: new Date('2024-01-08') },
+	// 	{ value: 5, date: new Date('2024-01-09') },
+	// 	{ value: 9, date: new Date('2024-01-10') },
+	// 	{ value: 1, date: new Date('2024-01-11') }
+	// ];
+	// let largest = Math.max(...fakeActivity.map((x) => x.value));
 
 	let showCycles = false;
 	let isCustom = false;
-	let currentId;
+	let currentIdx;
 	let currentCycles;
 
-	function openCycles(id, custom) {
+	function openEditCycles(index, custom) {
 		showCycles = true;
-		currentId = id;
+		currentIdx = index;
 		isCustom = custom;
 		if (isCustom) {
-			currentCycles = presets[id].cycles;
+			currentCycles = custom[index].cycles;
 		} else {
-			currentCycles = exercises[id].cycles;
+			currentCycles = $presets[index].cycles;
 		}
 	}
 
-	function closeCycles() {
+	function cancelEditCycles() {
 		showCycles = false;
 	}
 
 	function setCycles() {
 		if (currentCycles > 0 && currentCycles % 1 == 0) {
 			if (isCustom) {
-				presets[currentId].cycles = currentCycles;
+				$customs[currentIdx].cycles = currentCycles;
 			} else {
-				exercises[currentId].cycles = currentCycles;
+				$presets[currentIdx].cycles = currentCycles;
 			}
 		} else {
 			if (isCustom) {
-				presets[currentId].cycles = 10;
+				$customs[currentIdx].cycles = 10;
 			} else {
-				exercises[currentId].cycles = 10;
+				$presets[currentIdx].cycles = 10;
 			}
 		}
 
@@ -81,6 +84,10 @@
 		let day = date.getDate();
 		return `${month}/${day}`;
 	}
+
+	function deleteExercise(index) {
+		$customs = $customs.filter((_, i) => i !== index);
+	}
 </script>
 
 <svelte:head>
@@ -93,14 +100,24 @@
 		<div class="form-popup" transition:fade={{ duration: 100 }}>
 			<form class="form-container" transition:fade={{ duration: 100 }}>
 				<label for="cycles">number of cycles</label>
-				<input type="number" min="1" step="1" bind:value={currentCycles} />
 
-				<button type="submit" class="btn" on:click|preventDefault={() => setCycles()}>
-					submit
-				</button>
-				<button type="button" class="btn cancel" on:click|preventDefault={() => closeCycles()}>
-					close
-				</button>
+				<div class="formbuttons">
+					<input type="number" min="1" step="1" bind:value={currentCycles} />
+					<button
+						type="button"
+						class="icon-button cancel"
+						on:click|preventDefault={() => cancelEditCycles()}
+					>
+						<IconX style="font-size: 1.3rem;" />
+					</button>
+					<button
+						type="submit"
+						class="icon-button submit"
+						on:click|preventDefault={() => setCycles()}
+					>
+						<IconCheck style="font-size: 1.3rem;" />
+					</button>
+				</div>
 			</form>
 		</div>
 	{/if}
@@ -118,13 +135,13 @@
 				<a href="about" class="icon-button" title="about">
 					<IconInfo style="font-size: 1.3rem;" />
 				</a>
-				<a href="login" class="icon-button" title="account">
+				<!-- <a href="login" class="icon-button" title="account">
 					<IconUser style="font-size: 1.3rem;" />
-				</a>
+				</a> -->
 			</div>
 		</div>
 
-		<h2>activity</h2>
+		<!-- <h2>activity</h2>
 		<div class="graph">
 			{#each fakeActivity as { value, date }}
 				<div class="day">
@@ -132,21 +149,21 @@
 					<div class="label">{formatDate(date)}</div>
 				</div>
 			{/each}
-		</div>
+		</div> -->
 
 		<h2>exercises</h2>
 		<div class="exercises">
-			{#each Object.keys(exercises) as id}
-				<a href="/{id}" class="exercise" title="{id} breathing">
+			{#each $presets as preset, i}
+				<a href="/{preset.id}" class="exercise" title="{preset.id} breathing">
 					<div class="left">
-						<h3>{exercises[id].name}</h3>
-						<p>{exercises[id].cycles} cycles - {totalTime(exercises[id])}</p>
-						<p>{exercises[id].description}</p>
+						<h3>{preset.name}</h3>
+						<p>{preset.cycles} cycles - {totalTime(preset)}</p>
+						<p>{preset.description}</p>
 					</div>
 					<button
 						class="icon-button"
 						title="edit number of cycles"
-						on:click|preventDefault={() => openCycles(id, false)}
+						on:click|preventDefault={() => openEditCycles(i, false)}
 					>
 						<IconSlider style="font-size: 1rem;" />
 					</button>
@@ -163,20 +180,29 @@
 
 		<h2>custom exercises</h2>
 		<div class="exercises b">
-			{#each Object.keys(presets) as id}
-				<a href="/{id}" class="exercise" title="{id} breathing">
+			{#each $customs as custom, i}
+				<a href="/{custom.id}" class="exercise" title="{custom.id} breathing">
 					<div class="left">
-						<h3>{presets[id].name}</h3>
-						<p>{presets[id].cycles} cycles - {totalTime(presets[id])}</p>
-						<p>{presets[id].description}</p>
+						<h3>{custom.name}</h3>
+						<p>{custom.cycles} cycles - {totalTime(custom)}</p>
+						<p>{custom.description}</p>
 					</div>
-					<button
-						class="icon-button"
-						title="edit number of cycles"
-						on:click|preventDefault={() => openCycles(id, true)}
-					>
-						<IconSlider style="font-size: 1rem;" />
-					</button>
+					<div class="smallbuttons">
+						<button
+							class="icon-button"
+							title="edit number of cycles"
+							on:click|preventDefault={() => openEditCycles(i, true)}
+						>
+							<IconSlider style="font-size: 1rem;" />
+						</button>
+						<button
+							class="icon-button"
+							title="delete custom exercise"
+							on:click|preventDefault={() => deleteExercise(i)}
+						>
+							<IconTrash style="font-size: 1rem;" />
+						</button>
+					</div>
 				</a>
 			{/each}
 		</div>
@@ -225,21 +251,31 @@
 		gap: 1rem;
 	}
 
+	.smallbuttons {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.formbuttons {
+		display: flex;
+		gap: 1rem;
+
+		input {
+			width: 100%;
+		}
+	}
+
 	.exercises {
 		display: grid;
 		grid-template-columns: 30rem 30rem;
 		gap: 1rem;
-
-		&.b {
-			margin-bottom: 1rem;
-		}
 	}
 
 	.exercise {
-		padding: 1rem;
+		padding: 1.1rem;
 		background-color: var(--bg-2);
 		backdrop-filter: blur(6px);
-		border-radius: 1rem;
+		border-radius: 2rem;
 		text-decoration: none;
 		color: inherit;
 		cursor: pointer;
@@ -259,11 +295,13 @@
 		}
 
 		button {
-			padding: 0.6rem;
+			padding: 0.7rem;
 			backdrop-filter: none;
 		}
 
 		&.create {
+			padding: 1rem;
+			margin-top: 1rem;
 			justify-content: center;
 			align-items: center;
 			font-size: 1.2rem;
@@ -271,6 +309,10 @@
 			span {
 				margin-left: 0.5rem;
 			}
+		}
+
+		.left {
+			margin-left: 0.3rem;
 		}
 
 		&:hover:not(:has(button:hover)) {
@@ -283,7 +325,7 @@
 		width: 100%;
 		background-color: var(--bg-2);
 		backdrop-filter: blur(6px);
-		border-radius: 1rem;
+		border-radius: 2rem;
 		padding: 1.5rem 0 1rem 0;
 
 		display: flex;
@@ -315,15 +357,15 @@
 		height: 100%;
 		position: fixed;
 		z-index: 9;
-		backdrop-filter: blur(6px);
 		top: 0;
 		left: 0;
+		backdrop-filter: blur(6px);
 	}
 
 	.form-container {
 		max-width: 30rem;
 		width: 100%;
-		padding: 2rem;
+		padding: 1.5rem;
 		background-color: var(--bg-2);
 		border-radius: 2rem;
 		display: flex;
@@ -338,9 +380,10 @@
 	.form-container input[type='number'] {
 		width: 100%;
 		border: none;
-		padding: 1rem;
+		padding: 0.7rem 1.4rem;
 		border-radius: 2rem;
 		font: inherit;
+		font-size: 1.2rem;
 		color: inherit;
 		background-color: var(--bg-3);
 	}
@@ -351,10 +394,7 @@
 	}
 
 	.form-container button {
-		padding: 1rem;
-		border-radius: 2rem;
 		background-color: var(--bg-3);
-		transition: 0.2s;
 		&:hover {
 			background-color: var(--bg-4);
 		}

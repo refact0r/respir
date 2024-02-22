@@ -4,7 +4,7 @@
 	import IconHouse from '~icons/ph/house-duotone';
 	import IconReset from '~icons/ph/arrow-clockwise-duotone';
 	import { onMount, onDestroy } from 'svelte';
-	import { ambienceVolume, speechVolume } from '../../lib/stores/volumeData.js';
+	import { preferences } from '$lib/stores/preferences.js';
 	import { writable } from 'svelte/store';
 	import Modal, { bind } from 'svelte-simple-modal';
 	import Popup from './Popup.svelte';
@@ -22,10 +22,10 @@
 		outWav = new Audio('/audio/breathe-out.wav');
 		holdWav = new Audio('/audio/hold.wav');
 		forestWav = new Audio('/audio/forest.mp3');
-		inWav.volume = $speechVolume;
-		outWav.volume = $speechVolume;
-		holdWav.volume = $speechVolume;
-		forestWav.volume = $ambienceVolume;
+		inWav.volume = $preferences.speechVolume;
+		outWav.volume = $preferences.speechVolume;
+		holdWav.volume = $preferences.speechVolume;
+		forestWav.volume = $preferences.ambienceVolume;
 	});
 
 	onDestroy(() => {

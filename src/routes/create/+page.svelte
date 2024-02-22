@@ -1,131 +1,54 @@
 <script>
 	import IconHouse from '~icons/ph/house-duotone';
+	import IconPlus from '~icons/ph/plus';
 	import { goto } from '$app/navigation';
-	import { presets } from '$lib/custom-presets.js';
+	import { customs } from '$lib/stores/exercises.js';
 
-	let custom_name;
-	let custom_desc;
-	let custom_cycles;
-	let custom_in_duration;
-	let custom_hold_init_duration;
-	let custom_out_duration;
-	let custom_hold_after_duration;
-	let choice;
+	let customName;
+	let customDesc;
+	let customCycles = 10;
+	let customBID = 4;
+	let customBIHD = 4;
+	let customBOD = 4;
+	let customBOHD = 4;
 
 	function addCustomPreset() {
-		let routineType1 = {
+		let custom = {
+			id: encodeURIComponent(customName),
+			name: customName,
+			description: customDesc,
+			cycles: customCycles,
+			animation: 'circle',
 			routine: [
 				{
 					name: 'breathe in',
-					duration: 4,
+					duration: customBID,
 					type: 'in'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
 				}
 			]
 		};
-		let routineType2 = {
-			routine: [
-				{
-					name: 'breathe in',
-					duration: 4,
-					type: 'in'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
-				}
-			]
-		};
-		let routineType3 = {
-			routine: [
-				{
-					name: 'breathe in',
-					duration: 4,
-					type: 'in'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				}
-			]
-		};
-		let routineType4 = {
-			routine: [
-				{
-					name: 'breathe in',
-					duration: 4,
-					type: 'in'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				}
-			]
-		};
-		if (custom_hold_init_duration > 0 && custom_hold_after_duration > 0) {
-			routineType4.routine[0].duration = custom_in_duration;
-			routineType4.routine[1].duration = custom_hold_init_duration;
-			routineType4.routine[2].duration = custom_out_duration;
-			routineType4.routine[3].duration = custom_hold_after_duration;
-			choice = routineType4;
-		} else if (custom_hold_after_duration > 0) {
-			routineType3.routine[0].duration = custom_in_duration;
-			routineType3.routine[1].duration = custom_out_duration;
-			routineType3.routine[2].duration = custom_hold_after_duration;
-			choice = routineType3;
-		} else if (custom_hold_init_duration > 0) {
-			routineType2.routine[0].duration = custom_in_duration;
-			routineType2.routine[1].duration = custom_hold_init_duration;
-			routineType2.routine[2].duration = custom_out_duration;
-			choice = routineType2;
-		} else {
-			routineType1.routine[0].duration = custom_in_duration;
-			routineType1.routine[1].duration = custom_out_duration;
-			choice = routineType1;
+
+		if (customBIHD > 0) {
+			custom.routine.push({
+				name: 'hold',
+				duration: customBIHD,
+				type: 'hold'
+			});
+		}
+		custom.routine.push({
+			name: 'breathe out',
+			duration: customBOD,
+			type: 'out'
+		});
+		if (customBOHD > 0) {
+			custom.routine.push({
+				name: 'hold',
+				duration: customBOHD,
+				type: 'hold'
+			});
 		}
 
-		let exercise = {
-			name: custom_name + ' breathing',
-			description: custom_desc ? custom_desc : '',
-			cycles: custom_cycles,
-			animation: 'circle',
-			routine: []
-		};
-		exercise.routine = choice.routine;
-		//console.log(exercise);
-		presets[custom_name] = exercise;
-		//console.log(presets[custom_name].animation);
-		goto('/');
-	}
-
-	function returnHome() {
+		$customs = [...$customs, custom];
 		goto('/');
 	}
 </script>
@@ -136,122 +59,112 @@
 </svelte:head>
 
 <main>
-	<h1>create new breathing exercise</h1>
-	<div class="form">
+	<div>
+		<div class="header">
+			<a class="icon-button" href="/">
+				<IconHouse style="font-size: 1.3rem;" />
+			</a>
+			<h1>create custom exercise</h1>
+		</div>
 		<form on:submit|preventDefault={() => addCustomPreset()}>
-			<div class="row">
-				<div class="column">
-					<label for="name">name:</label>
-					<br />
-					<input
-						type="text"
-						name="name"
-						title="input name for custom breathing exercise"
-						minlength="1"
-						maxlength="10"
-						required
-						bind:value={custom_name}
-					/>
-					<br /><br />
-					<label for="description">description:</label>
+			<div class="box">
+				<div class="row">
+					<div class="group">
+						<label for="name">name</label>
+						<br />
+						<input
+							type="text"
+							name="name"
+							title="name"
+							minlength="1"
+							maxlength="20"
+							required
+							bind:value={customName}
+						/>
+					</div>
+					<div class="group cycles">
+						<label for="cycles">cycles</label>
+						<br />
+						<input
+							type="number"
+							name="cycles"
+							title="number of cycles"
+							min="1"
+							step="1"
+							required
+							bind:value={customCycles}
+						/>
+					</div>
+				</div>
+				<div class="group">
+					<label for="description">description</label>
 					<br />
 					<input
 						type="text"
 						name="description"
-						title="input description for custom breathing exercise"
-						maxlength="40"
-						bind:value={custom_desc}
+						title="description"
+						maxlength="50"
+						bind:value={customDesc}
 					/>
-					<br /><br />
-					<label for="cycles">cycle count:</label>
-					<br />
-					<input
-						type="number"
-						name="cycles"
-						title="input number of cycles for custom breathing exercise"
-						min="1"
-						step="1"
-						required
-						bind:value={custom_cycles}
-					/>
-					<br />
-					<p>animation shape:</p>
-					<div class="dots">
+				</div>
+				<div class="row">
+					<div class="group">
+						<label for="bid">breathe in duration </label>
+						<br />
 						<input
-							type="radio"
-							id="circle"
-							name="animation-shape"
-							value="circle"
-							checked="checked"
-							title="circle animation option for custom breathing exercise"
+							type="number"
+							name="bid"
+							title="breathe in duration"
+							min="1"
+							step="1"
+							required
+							bind:value={customBID}
 						/>
-						<label for="circle">circle</label><br />
+					</div>
+					<div class="group">
+						<label for="bihd">breathe in hold duration </label>
+						<br />
 						<input
-							type="radio"
-							id="box"
-							name="animation-shape"
-							value="box"
-							disabled
-							title="box animation option for custom breathing exercise (currently not available)"
+							type="number"
+							name="bihd"
+							title="breathe in hold duration (set this to zero for no hold)"
+							min="0"
+							step="1"
+							required
+							bind:value={customBIHD}
 						/>
-						<label for="box">box</label>
 					</div>
 				</div>
-				<div class="column">
-					<label for="bid">breathe in duration: </label>
-					<br />
-					<input
-						type="number"
-						name="bid"
-						title="input breathe in duration"
-						min="1"
-						step="1"
-						required
-						bind:value={custom_in_duration}
-					/> <br /><br />
-					<label for="bfhd">breathe first hold duration: </label>
-					<br />
-					<input
-						type="number"
-						name="bfhd"
-						title="input breathe first hold duration (set this to zero for no hold)"
-						min="0"
-						step="1"
-						required
-						bind:value={custom_hold_init_duration}
-					/> <br /><br />
-					<label for="bod">breathe out duration: </label>
-					<br />
-					<input
-						type="number"
-						name="bod"
-						title="input breathe out duration"
-						min="1"
-						step="1"
-						required
-						bind:value={custom_out_duration}
-					/> <br /><br />
-					<label for="bshd">breathe second hold duration: </label>
-					<br />
-					<input
-						type="number"
-						name="bshd"
-						title="input breathe second hold duration (set this to zero for no hold)"
-						min="0"
-						step="1"
-						required
-						bind:value={custom_hold_after_duration}
-					/> <br /><br />
+				<div class="row">
+					<div class="group">
+						<label for="bod">breathe out duration </label>
+						<br />
+						<input
+							type="number"
+							name="bod"
+							title="breathe out duration"
+							min="1"
+							step="1"
+							required
+							bind:value={customBOD}
+						/>
+					</div>
+					<div class="group">
+						<label for="bohd">breathe out hold duration </label>
+						<br />
+						<input
+							type="number"
+							name="bohd"
+							title="breathe out hold duration (set this to zero for no hold)"
+							min="0"
+							step="1"
+							required
+							bind:value={customBOHD}
+						/>
+					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="column g">
-					<button type="submit" class="btn l"> submit </button>
-				</div>
-				<div class="column g b">
-					<button type="button" class="btn" on:click|preventDefault={() => returnHome()}>
-						cancel
-					</button>
+				<div class="row">
+					<button class="" title="submit"><IconPlus style="font-size: 1.2rem;" /> create </button>
 				</div>
 			</div>
 		</form>
@@ -266,91 +179,73 @@
 		@include flexCenter;
 	}
 
-	.form {
+	.header {
+		display: flex;
 		align-items: center;
-		padding: 2rem;
+		gap: 1.5rem;
+	}
+
+	.box {
+		padding: 1.5rem;
 		border-radius: 2rem;
 		background-color: var(--bg-2);
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
 	}
 
 	.row {
 		display: flex;
+		gap: 1rem;
 	}
 
-	.column {
-		flex: 50%;
-		padding: 0rem 2rem;
+	.group {
+		width: 100%;
 
-		&.g {
-			padding: 0rem 0.5rem;
+		&.cycles {
+			width: 30%;
 		}
 	}
 
-	p {
-		margin-bottom: 0rem;
-	}
-
-	.form .btn {
-		padding: 1rem;
-		border-radius: 2rem;
+	button {
+		margin-left: auto;
 		background-color: var(--bg-2);
-		transition: 0.2s;
-		&.l {
-			float: right;
-		}
+		padding: 0.8rem 1rem;
+		gap: 0.5rem;
+		border-radius: 2rem;
+		margin-top: 1rem;
+		font-size: 1.2rem;
+		transition: background-color 0.2s ease-in-out;
+
+		@include flexCenter;
+
 		&:hover {
 			background-color: var(--bg-3);
 		}
 	}
 
-	.dots {
-		padding: 0.5rem 0rem;
+	label {
+		margin-bottom: 0.3rem;
+		display: inline-block;
 	}
 
-	.form input[type='number'] {
+	input {
+		width: 100%;
 		border: none;
-		padding: 0.5rem;
-		border-radius: 1rem;
-		font: inherit;
-		color: inherit;
-		background-color: var(--bg-3);
-	}
-	.form input[type='text'] {
-		border: none;
-		padding: 0.5rem;
-		border-radius: 1rem;
-		font: inherit;
-		color: inherit;
-		background-color: var(--bg-3);
-	}
-	.form input[type='radio'] {
-		appearance: none;
-		width: 1rem;
-		height: 1rem;
-		border: 1px solid var(--bg-3);
-		border-radius: 50%;
 		outline: none;
-		box-shadow: 0 0 5px var(--bg-2);
-		transition: box-shadow 0.3s ease;
-		&:before {
-			content: '';
-			display: block;
-			width: 60%;
-			height: 60%;
-			margin: 20% auto;
-			border-radius: 50%;
-		}
-		&:checked:before {
-			background: var(--bg-3);
-		}
+		font: inherit;
+		color: inherit;
+		transition: background-color 0.2s ease-in-out;
 	}
 
-	.form input[type='number']:focus {
-		outline: none;
-		background-color: var(--bg-2);
-	}
-	.form input[type='text']:focus {
-		outline: none;
-		background-color: var(--bg-2);
+	input[type='text'],
+	input[type='number'] {
+		padding: 0.7rem 1.4rem;
+		border-radius: 2rem;
+		background-color: var(--bg-3);
+
+		&:focus {
+			background-color: var(--bg-2);
+		}
 	}
 </style>

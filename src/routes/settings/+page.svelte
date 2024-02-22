@@ -1,12 +1,7 @@
 <script>
-	import IconCheck from '~icons/ph/check-bold';
-	import { ambienceVolume, speechVolume } from '../../lib/stores/volumeData.js';
-	function handleAmbienceVolumeChange(event) {
-		ambienceVolume.set(event.target.value);
-	}
-	function handleSpeechVolumeChange(event) {
-		speechVolume.set(event.target.value);
-	}
+	import IconHouse from '~icons/ph/house-duotone';
+	import IconReset from '~icons/ph/arrow-clockwise-duotone';
+	import { preferences, defaultPreferences } from '$lib/stores/preferences.js';
 </script>
 
 <svelte:head>
@@ -15,35 +10,48 @@
 </svelte:head>
 
 <main>
-	<h1>settings</h1>
-	<div class="sliders">
-		<label for="ambienceVolume">ambience volume:</label>
-		<input
-			class="slider"
-			type="range"
-			min="0"
-			max="1"
-			step="0.05"
-			title="change volume of ambient sounds"
-			bind:value={$ambienceVolume}
-			on:input={handleAmbienceVolumeChange}
-		/>
+	<div class="content">
+		<div class="header">
+			<a class="icon-button" href="/">
+				<IconHouse style="font-size: 1.3rem;" />
+			</a>
+			<h1>settings</h1>
+			<button
+				class="icon-button"
+				title="reset to default"
+				on:click|preventDefault={() => preferences.set(defaultPreferences)}
+			>
+				<IconReset style="font-size: 1.3rem;" />
+			</button>
+		</div>
+		<div class="box">
+			<div class="row">
+				<label for="ambienceVolume">ambience volume</label>
+				<input
+					class="slider"
+					type="range"
+					min="0"
+					max="1"
+					step="0.05"
+					title="change volume of ambient sounds"
+					bind:value={$preferences.ambienceVolume}
+				/>
+			</div>
 
-		<label for="speechVolume">speech volume:</label>
-		<input
-			class="slider"
-			type="range"
-			min="0"
-			max="1"
-			step="0.05"
-			title="change volume of voice"
-			bind:value={$speechVolume}
-			on:input={handleSpeechVolumeChange}
-		/>
+			<div class="row">
+				<label for="speechVolume">speech volume</label>
+				<input
+					class="slider"
+					type="range"
+					min="0"
+					max="1"
+					step="0.05"
+					title="change volume of voice"
+					bind:value={$preferences.speechVolume}
+				/>
+			</div>
+		</div>
 	</div>
-	<a href="/" class="icon-button" title="submit settings and return home">
-		<IconCheck style="font-size: 1.3rem;" />
-	</a>
 </main>
 
 <style lang="scss">
@@ -54,58 +62,54 @@
 		@include flexCenter;
 	}
 
-	h1 {
-		font-size: 2.5rem;
-		margin: 0;
+	.header {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	button {
+		margin-left: auto;
+	}
+
+	.box {
+		padding: 1.5rem 1.5rem;
+		border-radius: 2rem;
+		background-color: var(--bg-2);
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 	}
 
 	label {
-		display: block;
-		margin-bottom: 10px;
-	}
-
-	.sliders {
-		padding: 2rem;
-		margin-top: 1rem;
-		border-radius: 2rem;
-		background-color: var(--bg-2);
+		width: 20rem;
 	}
 
 	.slider {
-		appearance: none;
 		width: 100%;
-		height: 0.75rem;
-		border-radius: 1rem;
-		background: #ffffff;
-		outline: none;
-		opacity: 0.7;
-		transition: opacity 0.2s;
-	}
-	.slider::-webkit-slider-thumb {
-		appearance: none;
-		width: 1rem;
-		height: 1rem;
-		border-radius: 50%;
-		background: hsl(179, 52%, 52%);
-		cursor: pointer;
-		transition: 0.2s;
-	}
-	.slider::-webkit-slider-thumb:hover {
-		background: hsl(179, 48%, 42%);
-	}
-	.slider::-moz-slider-thumb {
-		width: 1rem;
-		height: 1rem;
-		border-radius: 50%;
-		background: hsl(179, 52%, 52%);
-		cursor: pointer;
-		transition: 0.2s;
-	}
-	.slider::-moz-slider-thumb:hover {
-		background: hsl(179, 48%, 42%);
+		background: none;
 	}
 
-	.icon-button {
-		margin-top: 20px;
+	::-moz-range-thumb {
+		border: 2.5px solid var(--txt);
+		background-color: var(--bg-3);
+		backdrop-filter: blur(3px);
+		border-radius: 50%;
+	}
+	::-moz-range-progress {
+		background-color: var(--txt);
+		height: 2.5px;
+		border-radius: 2px;
+	}
+	::-moz-range-track {
+		background-color: var(--bg-3);
+		height: 2.5px;
+		border-radius: 2px;
 	}
 </style>
