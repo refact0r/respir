@@ -32,6 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"svelte-persisted-store": "^0.9.1",
 		"svelte-simple-modal": "^1.6.1"
 	}
 }
