@@ -1,6 +1,6 @@
 import { persisted } from 'svelte-persisted-store';
 
-export const hold = persisted('hold', 0);
+export const bestHold = persisted('bestHold', 0);
 export const customs = persisted('customs', []);
 export const presets = persisted('presets', [
 	{

@@ -5,17 +5,15 @@
 	import IconReset from '~icons/ph/arrow-clockwise-duotone';
 	import { onMount, onDestroy } from 'svelte';
 	import { preferences } from '$lib/stores/preferences.js';
-	import { writable } from 'svelte/store';
-	import Modal, { bind } from 'svelte-simple-modal';
-	import Popup from './Popup.svelte';
-	const modal = writable(null);
+	import { bestHold } from '$lib/stores/exercises.js';
+
+	let exercise = {
+		cycles: -1,
+		animation: 'circle',
+		routine: [{ name: 'hold', duration: 2, type: 'hold' }]
+	};
 
 	let inWav, outWav, holdWav, forestWav;
-
-	export let data;
-
-	let exercise = data.exercise;
-	//console.log(exercise);
 
 	onMount(() => {
 		inWav = new Audio('/audio/breathe-in.wav');
@@ -29,32 +27,19 @@
 	});
 
 	onDestroy(() => {
-		if (forestWav) {
-			forestWav.pause();
-			forestWav = null;
-		}
+		stopAudio();
 	});
-
-	if (exercise.animation === 'circle') {
-		let total = exercise.routine.reduce((sum, i) => sum + i.duration, 0);
-		let curr = 0;
-		for (let i = 0; i < exercise.routine.length; i++) {
-			exercise.routine[i].start = (curr / total) * 360;
-			curr += exercise.routine[i].duration;
-			exercise.routine[i].end = (curr / total) * 360;
-		}
-	}
 
 	let play = false;
 	let cycle = -2;
-	let step = 0;
+	let minutes = 0;
 	let timer;
 
 	let count = 0;
 	let text = 'click play to start';
 
-	let prevSec, prevStep;
-	let pausedSec, pausedStep;
+	let prevSec;
+	let prevMin = 0;
 
 	let size = 18;
 	let trackSize = 1;
@@ -64,25 +49,22 @@
 	let circleElem;
 	let textElem;
 	let countElem;
-	let barElem;
 
 	// when play/pause is clicked
 	function togglePlay() {
-		play = !play;
-		// initial start
-		if (cycle === -2 || cycle === exercise.cycles) {
-			barElem.style.width = '0%';
+		if (!play) {
+			play = true;
 			cycle = -1;
 			count = 3;
-			text = 'get ready';
+			text = 'breathe in';
+			circleElem.style.transform = `rotate(0deg)`;
+			countElem.style.opacity = 1;
+			textElem.style.opacity = 1;
 			forestWav.play();
+			inWav.play();
 			timer = window.requestAnimationFrame(firstFrame);
-			return;
-		}
-		if (play) {
-			timer = window.requestAnimationFrame(resumeFrame);
-			forestWav.play();
 		} else {
+			play = false;
 			stopAudio();
 		}
 	}
@@ -98,41 +80,21 @@
 		inWav.pause();
 		outWav.pause();
 		holdWav.pause();
+		forestWav.currentTime = 0;
+		inWav.currentTime = 0;
+		outWav.currentTime = 0;
+		holdWav.currentTime = 0;
 	}
 
 	function formatTime(secs) {
 		let mins = Math.floor(secs / 60);
-		let remainder = secs % 60;
+		let remainder = Math.round(secs % 60);
 		return `${mins}:${remainder.toString().padStart(2, '0')}`;
-	}
-
-	function reset() {
-		play = false;
-		stopAudio();
-		cycle = -2;
-		step = 0;
-		count = 0;
-		text = 'click play to start';
-		if (exercise.animation === 'box') {
-			circleElem.style.left = `${offset}rem`;
-			circleElem.style.bottom = `${offset}rem`;
-		} else {
-			circleElem.style.transform = `rotate(0deg)`;
-		}
-		countElem.style.opacity = 1;
-		textElem.style.opacity = 1;
 	}
 
 	// initialize start time
 	function firstFrame(time) {
 		prevSec = time;
-		prevStep = time;
-		frame(time);
-	}
-
-	function resumeFrame(time) {
-		prevSec = time - pausedSec;
-		prevStep = time - pausedStep;
 		frame(time);
 	}
 
@@ -141,18 +103,22 @@
 		const elapsedSec = time - prevSec;
 
 		if (!play) {
-			pausedSec = elapsedSec;
-			pausedStep = time - prevStep;
+			if (cycle >= 0) {
+				let finalTime = (count * 1000 + elapsedSec) / 1000;
+				countElem.style.opacity = 1;
+				count = finalTime;
+				console.log(finalTime);
+				if (finalTime >= $bestHold) {
+					$bestHold = finalTime;
+					text = 'new best time!';
+				}
+			}
 			return;
 		}
 
 		// animate stuff
 		if (cycle >= 0) {
-			if (exercise.animation === 'box') {
-				animateBox(time);
-			} else {
-				animateCircle(time);
-			}
+			animateCircle(time);
 		}
 		animateText(elapsedSec);
 
@@ -160,90 +126,25 @@
 		if (elapsedSec >= 1000) {
 			prevSec += 1000;
 
-			count--;
 			if (cycle === -1) {
-				// end countdown
+				count--;
 				if (count === 0) {
+					prevMin = prevSec;
 					cycle = 0;
-					updateStep(time);
+					text = 'hold';
+					holdWav.play();
 				}
 			} else {
-				// go to next step
-				if (count === 0) {
-					if (step === exercise.routine.length - 1) {
-						step = 0;
-						cycle++;
-
-						// all cycles complete
-						if (cycle == exercise.cycles) {
-							cycle = exercise.cycles;
-							reset();
-							let cycleDuration = exercise.routine.reduce((sum, curr) => sum + curr.duration, 0);
-							let secs = cycleDuration * exercise.cycles;
-							modal.set(
-								bind(Popup, {
-									time: formatTime(secs),
-									cycles: exercise.cycles,
-									exercise_name: exercise.name
-								})
-							);
-							return;
-						}
-					} else {
-						step++;
-					}
-					updateStep(time);
-				}
+				count++;
 			}
 		}
 		timer = window.requestAnimationFrame(frame);
 	}
 
-	function updateStep(time) {
-		prevStep = time;
-		count = exercise.routine[step].duration;
-		text = exercise.routine[step].name;
-		if (exercise.routine[step].type === 'in') {
-			inWav.play();
-		} else if (exercise.routine[step].type === 'out') {
-			outWav.play();
-		} else if (exercise.routine[step].type === 'hold') {
-			holdWav.play();
-		}
-	}
-
-	// animate circle around box
-	function animateBox(time) {
-		const elapsedStep = time - prevStep;
-		const stepDuration = exercise.routine[step].duration;
-		const distance = size - trackSize;
-		const increasing = (elapsedStep / 1000 / stepDuration) * distance + offset;
-		const decreasing = distance - (elapsedStep / 1000 / stepDuration) * distance + offset;
-		switch (step) {
-			case 0:
-				circleElem.style.left = `${offset}rem`;
-				circleElem.style.bottom = `${increasing}rem`;
-				break;
-			case 1:
-				circleElem.style.left = `${increasing}rem`;
-				circleElem.style.bottom = `${distance + offset}rem`;
-				break;
-			case 2:
-				circleElem.style.left = `${distance + offset}rem`;
-				circleElem.style.bottom = `${decreasing}rem`;
-				break;
-			case 3:
-				circleElem.style.left = `${decreasing}rem`;
-				circleElem.style.bottom = `${offset}rem`;
-				break;
-		}
-	}
-
 	// animate circle around circle
 	function animateCircle(time) {
-		const elapsedStep = time - prevStep;
-		const range = exercise.routine[step].end - exercise.routine[step].start;
-		circleElem.style.transform = `rotate(${(elapsedStep / 1000 / exercise.routine[step].duration) * range + exercise.routine[step].start}deg)`;
+		const elapsedMin = time - prevMin;
+		circleElem.style.transform = `rotate(${(elapsedMin / 1000 / 60) * 360}deg)`;
 	}
 
 	// animate text fades
@@ -251,22 +152,21 @@
 		if (elapsedSec >= 800) {
 			const progress = 1 - (elapsedSec - 800) / 200;
 			countElem.style.opacity = progress;
-			if (count === 1) {
+			if (count === 1 && cycle < 0) {
 				textElem.style.opacity = progress;
-				if (step === exercise.routine.length - 1 && cycle < exercise.cycles) {
-					barElem.style.width = `${Math.min((cycle / exercise.cycles) * 100 + (((elapsedSec - 800) / 200) * 100) / exercise.cycles, ((cycle + 1) / exercise.cycles) * 100)}%`;
-				}
 			}
 		} else if (elapsedSec <= 200) {
 			const progress = 1 - (200 - elapsedSec) / 200;
 			countElem.style.opacity = progress;
-			if (count === exercise.routine[step].duration && cycle >= 0) {
+			if (cycle === 0 && count === 0) {
 				textElem.style.opacity = progress;
 			}
 		}
 	}
 
-	// function toggleSettings() {}
+	function clearBest() {
+		$bestHold = 0;
+	}
 </script>
 
 <svelte:head>
@@ -278,16 +178,17 @@
 
 <main>
 	<div class="top">
-		<div class="cycle">{cycle < 0 ? 0 : cycle}</div>
-		<div class="bar">
-			<div class="value" bind:this={barElem}></div>
+		<div class="bestTime">
+			best time - {formatTime($bestHold)}
 		</div>
-		<div class="total">{exercise.cycles}</div>
+		<button class="small-button" on:click={clearBest}>
+			<IconReset style="font-size: 1.3rem;" />
+		</button>
 	</div>
 	<div class="middle">
 		<div class="visualizer">
-			<div class={exercise.animation === 'box' ? 'box' : 'loop'}>
-				<div class="count" bind:this={countElem}>{cycle >= -1 ? count : ''}</div>
+			<div class="loop">
+				<div class="count" bind:this={countElem}>{cycle < 0 ? count : formatTime(count)}</div>
 				<div class="circle" bind:this={circleElem}></div>
 				{#if exercise.animation === 'circle'}
 					{#each exercise.routine as step}
@@ -317,15 +218,10 @@
 				<IconPlay style="font-size: 1.8rem;" />
 			{/if}
 		</button>
-		<button class="icon-button side" on:click={reset}>
+		<button class="icon-button reset">
 			<IconReset style="font-size: 1.3rem;" />
 		</button>
-		<!-- <button class="side-button" on:click={toggleSettings}>
-			<IconGear style="font-size: 1.3rem;" />
-		</button> -->
 	</div>
-
-	<!-- <Modal show={$modal} unstyled={true} classBg="modal-bg" classWindow="modal-window"></Modal> -->
 </main>
 
 <svelte:window on:keydown|preventDefault={onKeyDown} />
@@ -344,32 +240,14 @@
 		align-items: center;
 	}
 
-	.bar {
-		background-color: var(--bg-2);
-		backdrop-filter: blur(3px);
-		border: none;
-		border-radius: 1rem;
-		width: 12rem;
-		height: 1rem;
-		overflow: hidden;
+	.bestTime {
+		font-size: 1.4rem;
+		text-align: center;
 	}
 
-	.value {
-		height: 100%;
-		width: 0%;
-		background-color: var(--bg-4);
-	}
-
-	.cycle {
-		font-size: 1.2rem;
-		width: 3rem;
-		text-align: right;
-	}
-
-	.total {
-		font-size: 1.2rem;
-		width: 3rem;
-		text-align: left;
+	.small-button {
+		@include flexCenter;
+		display: inline-flex;
 	}
 
 	.middle {
@@ -403,21 +281,14 @@
 		}
 	}
 
+	.reset {
+		visibility: hidden;
+	}
+
 	$size: 18rem;
 	$track-size: 1rem;
 	$circle-size: 2.5rem;
 	$offset: calc(-1rem * ($circle-size - $track-size) / 2rem - 1rem);
-
-	.box {
-		width: $size;
-		height: $size;
-		border: $track-size solid var(--bg-2);
-		border-radius: 2rem;
-		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
 
 	.count {
 		font-size: 3rem;
@@ -432,11 +303,6 @@
 		border: 2.5px solid var(--txt);
 		background-color: var(--bg-3);
 		backdrop-filter: blur(3px);
-	}
-
-	.box .circle {
-		left: $offset;
-		bottom: $offset;
 	}
 
 	.loop .circle {

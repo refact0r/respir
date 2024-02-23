@@ -1,7 +1,6 @@
 <script>
 	import { fade } from 'svelte/transition';
 	import IconAir from '~icons/ph/wind-duotone';
-	import IconUser from '~icons/ph/user-circle-duotone';
 	import IconGear from '~icons/ph/gear-duotone';
 	import IconInfo from '~icons/ph/info-duotone';
 	import IconSlider from '~icons/ph/sliders-horizontal-duotone';
@@ -9,25 +8,7 @@
 	import IconX from '~icons/ph/x';
 	import IconTrash from '~icons/ph/trash-duotone';
 	import IconPlus from '~icons/ph/plus';
-	import { presets } from '$lib/stores/exercises.js';
-	import { customs } from '$lib/stores/exercises.js';
-
-	let bestTime = 60;
-
-	// let fakeActivity = [
-	// 	{ value: 3, date: new Date('2024-01-01') },
-	// 	{ value: 12, date: new Date('2024-01-02') },
-	// 	{ value: 4, date: new Date('2024-01-03') },
-	// 	{ value: 6, date: new Date('2024-01-04') },
-	// 	{ value: 8, date: new Date('2024-01-05') },
-	// 	{ value: 10, date: new Date('2024-01-06') },
-	// 	{ value: 7, date: new Date('2024-01-07') },
-	// 	{ value: 2, date: new Date('2024-01-08') },
-	// 	{ value: 5, date: new Date('2024-01-09') },
-	// 	{ value: 9, date: new Date('2024-01-10') },
-	// 	{ value: 1, date: new Date('2024-01-11') }
-	// ];
-	// let largest = Math.max(...fakeActivity.map((x) => x.value));
+	import { presets, customs, bestHold } from '$lib/stores/exercises.js';
 
 	let showCycles = false;
 	let isCustom = false;
@@ -67,255 +48,6 @@
 		showCycles = false;
 	}
 
-	let showCustomDetails = false;
-	let customId;
-	let customName;
-	let customDescription;
-	let customCycles;
-	let customAnimation;
-	let customInDur;
-	let customHold1Dur;
-	let customOutDur;
-	let customHold2Dur;
-
-	function openCustom(id) {
-		showCustomDetails = true;
-		customId = id;
-		customName = presets[id].name.slice(0, presets[id].name.length - 10);
-		customDescription = presets[id].description;
-		customCycles = presets[id].cycles;
-		customAnimation = presets[id].animation;
-		customInDur = presets[id].routine[0].duration;
-		if (presets[id].routine.length > 3) {
-			customHold1Dur = presets[id].routine[1].duration;
-			customOutDur = presets[id].routine[2].duration;
-			customHold2Dur = presets[id].routine[3].duration;
-		} else if (presets[id].routine.length > 2) {
-			if (presets[id].routine[1].name.includes('hold')) {
-				customHold1Dur = presets[id].routine[1].duration;
-				customOutDur = presets[id].routine[2].duration;
-				customHold2Dur = 0;
-			} else {
-				customHold1Dur = 0;
-				customOutDur = presets[id].routine[1].duration;
-				customHold2Dur = presets[id].routine[2].duration;
-			}
-		} else {
-			customHold1Dur = 0;
-			customOutDur = presets[id].routine[1].duration;
-			customHold2Dur = 0;
-		}
-	}
-
-	function closeCustom() {
-		showCustomDetails = false;
-	}
-
-	function setCustom() {
-		let choice;
-		/*if (customName.length > 0) {
-			presets[customId].name = customName + ' breathing';
-		}*/
-		presets[customId].description = customDescription;
-		if (customCycles > 0 && customCycles % 1 == 0) {
-			presets[customId].cycles = customCycles;
-		}
-		if (!(customInDur > 0 && customInDur % 1 == 0)) {
-			customInDur = 1;
-		}
-		if (!(customOutDur > 0 && customOutDur % 1 == 0)) {
-			customOutDur = 1;
-		}
-		if (!(customHold1Dur % 1 == 0)) {
-			customHold1Dur = 1;
-		}
-		if (!(customHold2Dur % 1 == 0)) {
-			customHold2Dur = 1;
-		}
-		let routineType1 = {
-			routine: [
-				{
-					name: 'breathe in',
-					duration: 4,
-					type: 'in'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
-				}
-			]
-		};
-		let routineType2 = {
-			routine: [
-				{
-					name: 'breathe in',
-					duration: 4,
-					type: 'in'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
-				}
-			]
-		};
-		let routineType3 = {
-			routine: [
-				{
-					name: 'breathe in',
-					duration: 4,
-					type: 'in'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				}
-			]
-		};
-		let routineType4 = {
-			routine: [
-				{
-					name: 'breathe in',
-					duration: 4,
-					type: 'in'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				},
-				{
-					name: 'breathe out',
-					duration: 4,
-					type: 'out'
-				},
-				{
-					name: 'hold',
-					duration: 4,
-					type: 'hold'
-				}
-			]
-		};
-		if (customHold1Dur > 0 && customHold2Dur > 0) {
-			routineType4.routine[0].duration = customInDur;
-			routineType4.routine[1].duration = customHold1Dur;
-			routineType4.routine[2].duration = customOutDur;
-			routineType4.routine[3].duration = customHold2Dur;
-			choice = routineType4;
-		} else if (customHold2Dur > 0) {
-			routineType3.routine[0].duration = customInDur;
-			routineType3.routine[1].duration = customOutDur;
-			routineType3.routine[2].duration = customHold2Dur;
-			choice = routineType3;
-		} else if (customHold1Dur > 0) {
-			routineType2.routine[0].duration = customInDur;
-			routineType2.routine[1].duration = customHold1Dur;
-			routineType2.routine[2].duration = customOutDur;
-			choice = routineType2;
-		} else {
-			routineType1.routine[0].duration = customInDur;
-			routineType1.routine[1].duration = customOutDur;
-			choice = routineType1;
-		}
-
-		presets[customId].routine = choice.routine;
-
-		showCustomDetails = false;
-	}
-
-	function deleteCustom(id) {
-		showCustomDetails = false;
-		delete presets[id];
-		const element = document.getElementById(id);
-		var id = setInterval(frame, 10);
-		var degree = 0;
-		var opacity = 1;
-		function frame() {
-			if (degree == 180) {
-				clearInterval(id);
-				element.remove();
-			} else {
-				degree += 2;
-				opacity -= 0.012;
-				element.style.scale = 50 * Math.cos((degree * Math.PI) / 180) + 50 + '%';
-				element.style.opacity = opacity;
-			}
-		}
-	}
-
-	function copyCustom() {
-		let text = '';
-		let order = '';
-
-		let unfilteredName = presets[customId].name.slice(0, presets[customId].name.length - 10);
-		let filteredName = '';
-		for (let i = 0; i < unfilteredName.length; i++) {
-			filteredName += unfilteredName.charCodeAt(i) + '.';
-		}
-		let unfilteredDesc = presets[customId].description;
-		let filteredDesc = '';
-		for (let i = 0; i < unfilteredDesc.length; i++) {
-			filteredDesc += unfilteredDesc.charCodeAt(i) + '.';
-		}
-
-		if (presets[customId].routine.length > 3) {
-			order =
-				'ihoh;' +
-				presets[customId].routine[0].duration +
-				';' +
-				presets[customId].routine[1].duration +
-				';' +
-				presets[customId].routine[2].duration +
-				';' +
-				presets[customId].routine[3].duration +
-				';';
-		} else if (presets[customId].routine.length > 2) {
-			if (presets[customId].routine[1].type === 'hold') {
-				order =
-					'iho;' +
-					presets[customId].routine[0].duration +
-					';' +
-					presets[customId].routine[1].duration +
-					';' +
-					presets[customId].routine[2].duration +
-					';';
-			} else {
-				order =
-					'ioh;' +
-					presets[customId].routine[0].duration +
-					';' +
-					presets[customId].routine[1].duration +
-					';' +
-					presets[customId].routine[2].duration +
-					';';
-			}
-		} else {
-			order =
-				'io;' +
-				presets[customId].routine[0].duration +
-				';' +
-				presets[customId].routine[1].duration +
-				';';
-		}
-
-		text += filteredName + ';' + filteredDesc + ';' + presets[customId].cycles + ';' + order;
-
-		navigator.clipboard.writeText(text);
-		//showCustomDetails = false;
-	}
-
 	function totalTime(exercise) {
 		let cycleDuration = exercise.routine.reduce((sum, curr) => sum + curr.duration, 0);
 		let secs = cycleDuration * exercise.cycles;
@@ -324,7 +56,7 @@
 
 	function formatTime(secs) {
 		let mins = Math.floor(secs / 60);
-		let remainder = secs % 60;
+		let remainder = Math.round(secs % 60);
 		return `${mins}:${remainder.toString().padStart(2, '0')}`;
 	}
 
@@ -371,135 +103,6 @@
 		</div>
 	{/if}
 
-	{#if showCustomDetails}
-		<div class="form-popup" transition:fade={{ duration: 100 }}>
-			<form class="form-container g" transition:fade={{ duration: 100 }}>
-				<div class="row">
-					<div class="column">
-						<label for="name" style="font-size: 1rem;">name:</label>
-						<br />
-						<input
-							type="text"
-							name="name"
-							title="name for custom breathing exercise (uneditable)"
-							minlength="1"
-							maxlength="20"
-							bind:value={customName}
-							disabled
-						/>
-						<br /><br />
-						<label for="description" style="font-size: 1rem;">description:</label>
-						<br />
-						<input
-							type="text"
-							name="description"
-							title="input description for custom breathing exercise"
-							maxlength="40"
-							bind:value={customDescription}
-						/>
-						<br /><br />
-						<label for="cycles" style="font-size: 1rem;">cycle count:</label>
-						<br />
-						<input
-							type="number"
-							name="cycles"
-							title="input number of cycles for custom breathing exercise"
-							min="1"
-							step="1"
-							required
-							bind:value={customCycles}
-						/>
-						<br /><br />
-						<p style="margin:0px;">animation shape:</p>
-						<div class="dots">
-							<input
-								type="radio"
-								id="circle"
-								name="animation-shape"
-								value="circle"
-								checked="checked"
-								title="circle animation option for custom breathing exercise"
-							/>
-							<label for="circle" style="font-size: 1rem;">circle</label><br />
-							<input
-								type="radio"
-								id="box"
-								name="animation-shape"
-								value="box"
-								disabled
-								title="box animation option for custom breathing exercise (currently not available)"
-							/>
-							<label for="box" style="font-size: 1rem;">box</label>
-						</div>
-					</div>
-					<div class="column">
-						<label for="bid" style="font-size: 1rem;">breathe in duration: </label>
-						<br />
-						<input
-							type="number"
-							name="bid"
-							title="input breathe in duration"
-							min="1"
-							step="1"
-							required
-							bind:value={customInDur}
-						/> <br /><br />
-						<label for="bfhd" style="font-size: 1rem;">breathe first hold duration: </label>
-						<br />
-						<input
-							type="number"
-							name="bfhd"
-							title="input breathe first hold duration (set this to zero for no hold)"
-							min="0"
-							step="1"
-							required
-							bind:value={customHold1Dur}
-						/> <br /><br />
-						<label for="bod" style="font-size: 1rem;">breathe out duration: </label>
-						<br />
-						<input
-							type="number"
-							name="bod"
-							title="input breathe out duration"
-							min="1"
-							step="1"
-							required
-							bind:value={customOutDur}
-						/> <br /><br />
-						<label for="bshd" style="font-size: 1rem;">breathe second hold duration: </label>
-						<br />
-						<input
-							type="number"
-							name="bshd"
-							title="input breathe second hold duration (set this to zero for no hold)"
-							min="0"
-							step="1"
-							required
-							bind:value={customHold2Dur}
-						/> <br /><br />
-					</div>
-				</div>
-				<div class="row">
-					<div class="columb">
-						<button type="submit" class="btn l" on:click|preventDefault={() => setCustom()}>
-							update
-						</button>
-					</div>
-					<div class="columb">
-						<button type="button" class="btn c" on:click|preventDefault={() => closeCustom()}>
-							close
-						</button>
-					</div>
-					<div class="columb">
-						<button type="button" class="btn" on:click|preventDefault={() => copyCustom()}>
-							copy
-						</button>
-					</div>
-				</div>
-			</form>
-		</div>
-	{/if}
-
 	<section>
 		<div class="head">
 			<div class="text">
@@ -514,9 +117,6 @@
 				<a href="about" class="icon-button" title="about">
 					<IconInfo style="font-size: 1.3rem;" />
 				</a>
-				<!-- <a href="login" class="icon-button" title="account">
-					<IconUser style="font-size: 1.3rem;" />
-				</a> -->
 			</div>
 		</div>
 
@@ -551,7 +151,7 @@
 			<a href="/hold-test" class="exercise" title="breath holding test">
 				<div class="left">
 					<h3>breath holding test</h3>
-					<p>best time - {formatTime(bestTime)}</p>
+					<p>best time - {formatTime($bestHold)}</p>
 					<p>test your breath-holding capacity</p>
 				</div>
 			</a>
