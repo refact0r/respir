@@ -4,4 +4,9 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<title>respir: {data.name}</title>
+	<meta name="description" content={data.description} />
+</svelte:head>
+
 <Exercise {data} />

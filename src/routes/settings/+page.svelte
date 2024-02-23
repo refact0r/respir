@@ -6,7 +6,7 @@
 
 <svelte:head>
 	<title>respir: settings</title>
-	<meta name="description" content="" />
+	<meta name="description" content="configure volume settings." />
 </svelte:head>
 
 <main>
