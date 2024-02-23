@@ -1,17 +1,27 @@
 <script>
 	import IconHouse from '~icons/ph/house-duotone';
-	import IconPlus from '~icons/ph/plus';
+	import IconCheck from '~icons/ph/check';
 	import IconImport from '~icons/ph/arrow-square-in-duotone';
+	import IconCopy from '~icons/ph/copy-duotone';
 	import { goto } from '$app/navigation';
 	import { customs } from '$lib/stores/exercises.js';
+	import { onMount } from 'svelte';
+
+	export let data;
+
+	let { index, isCustom } = data;
+
+	console.log(data);
 
 	let customName;
 	let customDesc;
-	let customCycles = 10;
-	let customBID = 4;
-	let customBIHD = 4;
-	let customBOD = 4;
-	let customBOHD = 4;
+	let customCycles;
+	let customBID;
+	let customBIHD;
+	let customBOD;
+	let customBOHD;
+
+	$: deconstructCustom($customs[index]);
 
 	function constructCustom() {
 		let custom = {
@@ -52,9 +62,28 @@
 		return custom;
 	}
 
-	function addCustom() {
+	function deconstructCustom(custom) {
+		customName = custom.name;
+		customDesc = custom.description;
+		customCycles = custom.cycles;
+		for (let i = 0; i < custom.routine.length; i++) {
+			if (custom.routine[i].type === 'in') {
+				customBID = custom.routine[i].duration;
+			} else if (custom.routine[i].type === 'hold') {
+				if (i === 1) {
+					customBIHD = custom.routine[i].duration;
+				} else {
+					customBOHD = custom.routine[i].duration;
+				}
+			} else if (custom.routine[i].type === 'out') {
+				customBOD = custom.routine[i].duration;
+			}
+		}
+	}
+
+	function editCustom() {
 		let custom = constructCustom();
-		$customs = [...$customs, custom];
+		$customs[index] = custom;
 		goto('/');
 	}
 
@@ -62,27 +91,18 @@
 
 	function importData() {
 		let data = JSON.parse(importValue);
-		customName = data.name;
-		customDesc = data.description;
-		customCycles = data.cycles;
-		for (let i = 0; i < data.routine.length; i++) {
-			if (data.routine[i].type === 'in') {
-				customBID = data.routine[i].duration;
-			} else if (data.routine[i].type === 'hold') {
-				if (i === 1) {
-					customBIHD = data.routine[i].duration;
-				} else {
-					customBOHD = data.routine[i].duration;
-				}
-			} else if (data.routine[i].type === 'out') {
-				customBOD = data.routine[i].duration;
-			}
-		}
+		deconstructCustom(data);
+	}
+
+	function exportData() {
+		let custom = constructCustom();
+		let exportValue = JSON.stringify(custom);
+		navigator.clipboard.writeText(exportValue);
 	}
 </script>
 
 <svelte:head>
-	<title>respir: create</title>
+	<title>respir: edit</title>
 	<meta name="description" content="" />
 </svelte:head>
 
@@ -92,7 +112,7 @@
 			<a class="icon-button" href="/">
 				<IconHouse style="font-size: 1.3rem;" />
 			</a>
-			<h1>create custom exercise</h1>
+			<h1>edit exercise</h1>
 		</div>
 		<div class="box">
 			<form on:submit|preventDefault={() => importData()}>
@@ -100,7 +120,14 @@
 					<div class="group">
 						<label for="import">import exercise data (optional)</label>
 						<br />
-						<input id="import" type="text" minlength="1" bind:value={importValue} required />
+						<input
+							id="import"
+							name="import"
+							type="text"
+							minlength="1"
+							bind:value={importValue}
+							required
+						/>
 					</div>
 					<button type="submit">
 						<IconImport style="font-size: 1.2rem;" />import
@@ -109,7 +136,7 @@
 			</form>
 		</div>
 		<br />
-		<form on:submit|preventDefault={() => addCustom()}>
+		<form on:submit|preventDefault={() => editCustom()}>
 			<div class="box">
 				<div class="row">
 					<div class="group">
@@ -119,7 +146,7 @@
 							id="name"
 							type="text"
 							minlength="1"
-							maxlength="50"
+							maxlength="20"
 							required
 							bind:value={customName}
 						/>
@@ -133,7 +160,7 @@
 				<div class="group">
 					<label for="description">description</label>
 					<br />
-					<input id="description" type="text" maxlength="100" bind:value={customDesc} />
+					<input id="description" type="text" maxlength="50" bind:value={customDesc} />
 				</div>
 				<div class="row">
 					<div class="group">
@@ -160,7 +187,10 @@
 					</div>
 				</div>
 				<div class="row buttons">
-					<button class="" title="submit"><IconPlus style="font-size: 1.2rem;" /> create </button>
+					<button class="" on:click|preventDefault={() => exportData()}>
+						<IconCopy style="font-size: 1.2rem;" /> copy data
+					</button>
+					<button class="" title="submit"><IconCheck style="font-size: 1.2rem;" /> confirm </button>
 				</div>
 			</div>
 		</form>
@@ -196,7 +226,7 @@
 		gap: 1rem;
 
 		&.buttons {
-			justify-content: flex-end;
+			justify-content: space-between;
 		}
 	}
 

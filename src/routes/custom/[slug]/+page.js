@@ -1,4 +1,4 @@
-import { presets } from '$lib/stores/exercises.js';
+import { customs } from '$lib/stores/exercises.js';
 import { get } from 'svelte/store';
 import { error } from '@sveltejs/kit';
 
@@ -6,8 +6,8 @@ export const ssr = false;
 
 export async function load({ params }) {
 	const { slug } = params;
-	const presetList = get(presets);
-	const exercise = presetList.find((preset) => preset.id === slug);
+	const customsList = get(customs);
+	const exercise = customsList[slug];
 
 	if (exercise) {
 		return { exercise };
