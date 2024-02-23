@@ -1,9 +1,17 @@
 <script>
 	import '../app.scss';
+	import { preferences } from '$lib/stores/preferences.js';
 	import { fade } from 'svelte/transition';
 
 	export let data;
+
+	$: theme = $preferences.darkMode ? 'dark' : 'light';
 </script>
+
+<svelte:head>
+	<meta name="color-scheme" content={theme} />
+	<link rel="stylesheet" href={`/theme/${theme}.css`} />
+</svelte:head>
 
 <div class="app">
 	{#key data.pathname}

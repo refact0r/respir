@@ -69,5 +69,6 @@
 		padding: 1rem 1.5rem;
 		border-radius: 2rem;
 		background-color: var(--bg-2);
+		backdrop-filter: blur(6px);
 	}
 </style>
