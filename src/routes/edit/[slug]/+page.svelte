@@ -5,13 +5,10 @@
 	import IconCopy from '~icons/ph/copy-duotone';
 	import { goto } from '$app/navigation';
 	import { customs } from '$lib/stores/exercises.js';
-	import { onMount } from 'svelte';
 
 	export let data;
 
-	let { index, isCustom } = data;
-
-	console.log(data);
+	let index = data.index;
 
 	let customName;
 	let customDesc;
@@ -39,7 +36,7 @@
 			]
 		};
 
-		if (customBIHD > 0) {
+		if (customBIHD && customBIHD > 0) {
 			custom.routine.push({
 				name: 'hold',
 				duration: customBIHD,
@@ -51,7 +48,7 @@
 			duration: customBOD,
 			type: 'out'
 		});
-		if (customBOHD > 0) {
+		if (customBOHD && customBOHD > 0) {
 			custom.routine.push({
 				name: 'hold',
 				duration: customBOHD,
@@ -171,7 +168,7 @@
 					<div class="group">
 						<label for="bihd">breathe in hold duration </label>
 						<br />
-						<input id="bihd" type="number" min="0" step="1" required bind:value={customBIHD} />
+						<input id="bihd" type="number" step="1" bind:value={customBIHD} />
 					</div>
 				</div>
 				<div class="row">
@@ -183,7 +180,7 @@
 					<div class="group">
 						<label for="bohd">breathe out hold duration </label>
 						<br />
-						<input id="bohd" type="number" min="0" step="1" required bind:value={customBOHD} />
+						<input id="bohd" type="number" step="1" bind:value={customBOHD} />
 					</div>
 				</div>
 				<div class="row buttons">

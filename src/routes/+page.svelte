@@ -167,7 +167,7 @@
 						<p>{custom.description}</p>
 					</div>
 					<div class="smallbuttons">
-						<a class="icon-button" title="edit custom exercise" href="/edit/{custom.id}">
+						<a class="icon-button" title="edit custom exercise" href="/edit/{i}">
 							<IconSlider style="font-size: 1rem;" />
 						</a>
 						<button

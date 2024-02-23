@@ -19,7 +19,10 @@
 			<button
 				class="icon-button"
 				title="reset to default"
-				on:click|preventDefault={() => preferences.set(defaultPreferences)}
+				on:click|preventDefault={() => {
+					$preferences.ambienceVolume = defaultPreferences.ambienceVolume;
+					$preferences.speechVolume = defaultPreferences.speechVolume;
+				}}
 			>
 				<IconReset style="font-size: 1.3rem;" />
 			</button>
