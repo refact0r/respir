@@ -8,8 +8,6 @@ export const prerender = false;
 export async function load({ params }) {
 	const { slug } = params;
 
-	console.log(get(presets), get(customs));
-
 	const presetList = get(presets);
 	const presetIndex = presetList.findIndex((preset) => preset.id === slug);
 

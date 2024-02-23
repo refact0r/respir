@@ -5,17 +5,12 @@
 	import IconReset from '~icons/ph/arrow-clockwise-duotone';
 	import { onMount, onDestroy } from 'svelte';
 	import { preferences } from '$lib/stores/preferences.js';
-	import { writable } from 'svelte/store';
-	import Modal, { bind } from 'svelte-simple-modal';
-	import Popup from './Popup.svelte';
-	const modal = writable(null);
 
 	let inWav, outWav, holdWav, forestWav;
 
 	export let data;
 
 	let exercise = data.exercise;
-	//console.log(exercise);
 
 	onMount(() => {
 		inWav = new Audio('/audio/breathe-in.wav');
@@ -29,10 +24,7 @@
 	});
 
 	onDestroy(() => {
-		if (forestWav) {
-			forestWav.pause();
-			forestWav = null;
-		}
+		stopAudio();
 	});
 
 	if (exercise.animation === 'circle') {
@@ -98,12 +90,6 @@
 		inWav.pause();
 		outWav.pause();
 		holdWav.pause();
-	}
-
-	function formatTime(secs) {
-		let mins = Math.floor(secs / 60);
-		let remainder = secs % 60;
-		return `${mins}:${remainder.toString().padStart(2, '0')}`;
 	}
 
 	function reset() {
@@ -180,13 +166,6 @@
 							reset();
 							let cycleDuration = exercise.routine.reduce((sum, curr) => sum + curr.duration, 0);
 							let secs = cycleDuration * exercise.cycles;
-							modal.set(
-								bind(Popup, {
-									time: formatTime(secs),
-									cycles: exercise.cycles,
-									exercise_name: exercise.name
-								})
-							);
 							return;
 						}
 					} else {
@@ -265,8 +244,6 @@
 			}
 		}
 	}
-
-	// function toggleSettings() {}
 </script>
 
 <svelte:head>
@@ -320,12 +297,7 @@
 		<button class="icon-button side" on:click={reset}>
 			<IconReset style="font-size: 1.3rem;" />
 		</button>
-		<!-- <button class="side-button" on:click={toggleSettings}>
-			<IconGear style="font-size: 1.3rem;" />
-		</button> -->
 	</div>
-
-	<!-- <Modal show={$modal} unstyled={true} classBg="modal-bg" classWindow="modal-window"></Modal> -->
 </main>
 
 <svelte:window on:keydown|preventDefault={onKeyDown} />
