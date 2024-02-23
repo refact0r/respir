@@ -1,5 +1,8 @@
-import { presets, customs } from '$lib/stores/exercises.js';
+import { presets } from '$lib/stores/exercises.js';
 import { get } from 'svelte/store';
+import { error } from '@sveltejs/kit';
+
+export const ssr = false;
 
 export async function load({ params }) {
 	const { slug } = params;
@@ -10,14 +13,5 @@ export async function load({ params }) {
 		return { exercise };
 	}
 
-	const customList = get(customs);
-	const custom = customList.find((custom) => custom.id === slug);
-
-	if (custom) {
-		return { exercise: custom };
-	}
-
-	return {
-		status: 404
-	};
+	throw error(404, 'Exercise not found');
 }

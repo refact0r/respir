@@ -96,20 +96,40 @@
 		background: none;
 	}
 
+	input[type='range'],
+	::-webkit-slider-thumb {
+		-webkit-appearance: none;
+	}
 	::-moz-range-thumb {
-		border: 2.5px solid var(--txt);
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid var(--txt);
 		background-color: var(--bg-3);
 		backdrop-filter: blur(3px);
 		border-radius: 50%;
 	}
+	::-webkit-slider-thumb {
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid var(--txt);
+		background-color: var(--bg-3);
+		backdrop-filter: blur(3px);
+		border-radius: 50%;
+		margin-top: calc(-0.5rem + 1px);
+	}
 	::-moz-range-progress {
 		background-color: var(--txt);
-		height: 2.5px;
+		height: 2px;
+		border-radius: 2px;
+	}
+	::-webkit-slider-runnable-track {
+		background-color: var(--bg-3);
+		height: 2px;
 		border-radius: 2px;
 	}
 	::-moz-range-track {
 		background-color: var(--bg-3);
-		height: 2.5px;
+		height: 2px;
 		border-radius: 2px;
 	}
 </style>

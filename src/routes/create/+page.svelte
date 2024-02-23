@@ -1,6 +1,7 @@
 <script>
 	import IconHouse from '~icons/ph/house-duotone';
 	import IconPlus from '~icons/ph/plus';
+	import IconImport from '~icons/ph/arrow-square-in-duotone';
 	import { goto } from '$app/navigation';
 	import { customs } from '$lib/stores/exercises.js';
 
@@ -12,7 +13,7 @@
 	let customBOD = 4;
 	let customBOHD = 4;
 
-	function addCustomPreset() {
+	function constructCustom() {
 		let custom = {
 			id: encodeURIComponent(customName),
 			name: customName,
@@ -48,8 +49,35 @@
 			});
 		}
 
+		return custom;
+	}
+
+	function addCustom() {
+		let custom = constructCustom();
 		$customs = [...$customs, custom];
 		goto('/');
+	}
+
+	let importValue;
+
+	function importData() {
+		let data = JSON.parse(importValue);
+		customName = data.name;
+		customDesc = data.description;
+		customCycles = data.cycles;
+		for (let i = 0; i < data.routine.length; i++) {
+			if (data.routine[i].type === 'in') {
+				customBID = data.routine[i].duration;
+			} else if (data.routine[i].type === 'hold') {
+				if (i === 1) {
+					customBIHD = data.routine[i].duration;
+				} else {
+					customBOHD = data.routine[i].duration;
+				}
+			} else if (data.routine[i].type === 'out') {
+				customBOD = data.routine[i].duration;
+			}
+		}
 	}
 </script>
 
@@ -66,18 +94,32 @@
 			</a>
 			<h1>create custom exercise</h1>
 		</div>
-		<form on:submit|preventDefault={() => addCustomPreset()}>
+		<div class="box">
+			<form on:submit|preventDefault={() => importData()}>
+				<div class="row">
+					<div class="group">
+						<label for="import">import exercise data (optional)</label>
+						<br />
+						<input id="import" type="text" minlength="1" bind:value={importValue} required />
+					</div>
+					<button type="submit">
+						<IconImport style="font-size: 1.2rem;" />import
+					</button>
+				</div>
+			</form>
+		</div>
+		<br />
+		<form on:submit|preventDefault={() => addCustom()}>
 			<div class="box">
 				<div class="row">
 					<div class="group">
 						<label for="name">name</label>
 						<br />
 						<input
+							id="name"
 							type="text"
-							name="name"
-							title="name"
 							minlength="1"
-							maxlength="20"
+							maxlength="50"
 							required
 							bind:value={customName}
 						/>
@@ -85,85 +127,39 @@
 					<div class="group cycles">
 						<label for="cycles">cycles</label>
 						<br />
-						<input
-							type="number"
-							name="cycles"
-							title="number of cycles"
-							min="1"
-							step="1"
-							required
-							bind:value={customCycles}
-						/>
+						<input id="cycles" type="number" min="1" step="1" required bind:value={customCycles} />
 					</div>
 				</div>
 				<div class="group">
 					<label for="description">description</label>
 					<br />
-					<input
-						type="text"
-						name="description"
-						title="description"
-						maxlength="50"
-						bind:value={customDesc}
-					/>
+					<input id="description" type="text" maxlength="100" bind:value={customDesc} />
 				</div>
 				<div class="row">
 					<div class="group">
 						<label for="bid">breathe in duration </label>
 						<br />
-						<input
-							type="number"
-							name="bid"
-							title="breathe in duration"
-							min="1"
-							step="1"
-							required
-							bind:value={customBID}
-						/>
+						<input id="bid" type="number" min="1" step="1" required bind:value={customBID} />
 					</div>
 					<div class="group">
 						<label for="bihd">breathe in hold duration </label>
 						<br />
-						<input
-							type="number"
-							name="bihd"
-							title="breathe in hold duration (set this to zero for no hold)"
-							min="0"
-							step="1"
-							required
-							bind:value={customBIHD}
-						/>
+						<input id="bihd" type="number" min="0" step="1" required bind:value={customBIHD} />
 					</div>
 				</div>
 				<div class="row">
 					<div class="group">
 						<label for="bod">breathe out duration </label>
 						<br />
-						<input
-							type="number"
-							name="bod"
-							title="breathe out duration"
-							min="1"
-							step="1"
-							required
-							bind:value={customBOD}
-						/>
+						<input id="bod" type="number" min="1" step="1" required bind:value={customBOD} />
 					</div>
 					<div class="group">
 						<label for="bohd">breathe out hold duration </label>
 						<br />
-						<input
-							type="number"
-							name="bohd"
-							title="breathe out hold duration (set this to zero for no hold)"
-							min="0"
-							step="1"
-							required
-							bind:value={customBOHD}
-						/>
+						<input id="bohd" type="number" min="0" step="1" required bind:value={customBOHD} />
 					</div>
 				</div>
-				<div class="row">
+				<div class="row buttons">
 					<button class="" title="submit"><IconPlus style="font-size: 1.2rem;" /> create </button>
 				</div>
 			</div>
@@ -192,11 +188,16 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		backdrop-filter: blur(6px);
 	}
 
 	.row {
 		display: flex;
 		gap: 1rem;
+
+		&.buttons {
+			justify-content: flex-end;
+		}
 	}
 
 	.group {
@@ -208,7 +209,6 @@
 	}
 
 	button {
-		margin-left: auto;
 		background-color: var(--bg-2);
 		padding: 0.8rem 1rem;
 		gap: 0.5rem;
