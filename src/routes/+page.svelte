@@ -341,7 +341,7 @@
 
 <svelte:head>
 	<title>respir</title>
-	<meta name="description" content="" />
+	<meta name="description" content="breathing exercises to help you relax, focus, or sleep." />
 </svelte:head>
 
 <main>

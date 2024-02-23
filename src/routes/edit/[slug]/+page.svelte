@@ -103,7 +103,7 @@
 
 <svelte:head>
 	<title>respir: edit</title>
-	<meta name="description" content="" />
+	<meta name="description" content="edit a custom breathing exercise." />
 </svelte:head>
 
 <main>

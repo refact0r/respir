@@ -5,7 +5,7 @@
 
 <svelte:head>
 	<title>respir: about</title>
-	<meta name="description" content="" />
+	<meta name="description" content="information about the respir web app." />
 </svelte:head>
 
 <main>
